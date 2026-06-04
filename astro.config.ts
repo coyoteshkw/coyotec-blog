@@ -28,7 +28,7 @@ export default defineConfig({
     }),
   ],
   i18n: {
-    locales: ["en"],
+    locales: ["en", "zh-CN"],
     defaultLocale: "en",
     routing: {
       prefixDefaultLocale: false,
@@ -56,17 +56,20 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  fonts: [
-    {
-      name: "Google Sans Code",
-      cssVariable: "--font-google-sans-code",
-      provider: fontProviders.google(),
-      fallbacks: ["monospace"],
-      weights: [300, 400, 500, 600, 700],
-      styles: ["normal", "italic"],
-      formats: ["woff", "ttf"],
-    },
-  ],
+  fonts:
+    process.env.USE_LOCAL_FONTS === "true"
+      ? []
+      : [
+          {
+            name: "Google Sans Code",
+            cssVariable: "--font-google-sans-code",
+            provider: fontProviders.google(),
+            fallbacks: ["monospace"],
+            weights: [300, 400, 500, 600, 700],
+            styles: ["normal", "italic"],
+            formats: ["woff", "ttf"],
+          },
+        ],
   env: {
     schema: {
       PUBLIC_GOOGLE_SITE_VERIFICATION: envField.string({

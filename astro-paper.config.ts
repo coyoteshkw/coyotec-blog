@@ -2,15 +2,16 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://astro-paper.pages.dev/",
-    title: "AstroPaper",
-    description: "A minimal, responsive and SEO-friendly Astro blog theme.",
-    author: "Sat Naing",
-    profile: "https://satna.ing",
+    url: "https://coyotec-blog.pages.dev/",
+    title: "萨查日志",
+    description: "我的个人记录,编程,折腾,游戏,什么都有",
+    author: "coyoteshkw",
+    profile: "https://coyoteshkw.github.io/tiddlylog",
     ogImage: "default-og.jpg",
-    lang: "en",
-    timezone: "Asia/Bangkok",
+    lang: "zh-CN",
+    timezone: "Asia/Shanghai",
     dir: "ltr",
+    googleVerification: "xxx",
   },
   posts: {
     perPage: 4,
@@ -24,15 +25,13 @@ export default defineAstroPaperConfig({
     showBackButton: true,
     editPost: {
       enabled: true,
-      url: "https://github.com/satnaing/astro-paper/edit/main/",
+      url: "https://github.com/coyoteshkw/coyotec-blog/edit/main/",
     },
     search: "pagefind",
   },
   socials: [
-    { name: "github",   url: "https://github.com/satnaing/astro-paper" },
-    { name: "x",        url: "https://x.com/username" },
-    { name: "linkedin", url: "https://www.linkedin.com/in/username/" },
-    { name: "mail",     url: "mailto:yourmail@gmail.com" },
+    { name: "github",   url: "https://github.com/coyoteshkw" },
+    { name: "mail",     url: "mailto:coyoteshkw@proton.me" },
   ],
   shareLinks: [
     { name: "whatsapp", url: "https://wa.me/?text=" },
