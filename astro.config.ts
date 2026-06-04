@@ -58,7 +58,7 @@ export default defineConfig({
   },
   fonts:
     process.env.USE_LOCAL_FONTS === "true"
-      ? []
+      ? undefined
       : [
           {
             name: "Google Sans Code",
