@@ -1,14 +1,15 @@
 ---
 pubDatetime: 2026-06-04T19:03:20.000+08:00
 modDatetime:
-title: 用雨云开一台Minecraft Mod服
+title: 如何使用雨云开一个 Minecraft 服务器
 featured: true
 draft: false
+ogImage: https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1780672215279_ChatGPT_Image_2026年6月1日_00_07_55.png
 tags:
   - Minecraft
   - 服务器
   - 游戏
-description: 受够用自己服务器开服MC带来的不便, 我找到了目前最好的方案
+description: 本文详细介绍如何使用雨云平台创建 Minecraft 服务器，包括配置选择、安装步骤和常见问题。受够用自己服务器开服MC带来的不便, 我找到了目前最好的方案
 ---
 
 在一月黑风高的晚上（并不），机械动力航空学发布，声势浩荡，多年未玩的牢玩家没经历过瓦尔基里的王朝，被航空学可以驾驶末地主岛的优化所蛊惑，踏上了希望和三五好友一起玩游戏的开服之旅。
