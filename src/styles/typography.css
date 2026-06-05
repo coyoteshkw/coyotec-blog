@@ -44,7 +44,7 @@
     }
 
     img {
-      @apply border-border mx-auto border rounded-lg;
+      @apply border-border mx-auto border rounded-lg transition duration-300 dark:brightness-80;
     }
 
     figcaption {
@@ -71,7 +71,7 @@
     }
 
     blockquote {
-      @apply border-s-accent/80 wrap-break-word opacity-80;
+      @apply border-s-accent/80 wrap-break-word opacity-80 not-italic;
     }
 
     details {
