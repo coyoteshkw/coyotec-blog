@@ -1,5 +1,3 @@
-import type { Root } from "mdast";
-
 const CJK = /[一-鿿㐀-䶿豈-﫿぀-ゟ゠-ヿ가-힯]/;
 const LATIN = /[a-zA-Z0-9]/;
 
@@ -29,5 +27,6 @@ function walk(node: Record<string, unknown> & { children?: unknown[] }) {
 }
 
 export function remarkCjkSpacing() {
-  return (tree: Root) => walk(tree as unknown as Record<string, unknown> & { children?: unknown[] });
+  return (tree: { children?: unknown[]; type: string }) =>
+    walk(tree as unknown as Record<string, unknown> & { children?: unknown[] });
 }
