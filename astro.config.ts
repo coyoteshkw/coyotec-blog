@@ -16,6 +16,7 @@ import {
   transformerNotationWordHighlight,
 } from "@shikijs/transformers";
 import { transformerFileName } from "./src/utils/transformers/fileName";
+import { remarkCjkSpacing } from "./src/utils/remarkCjkSpacing";
 import config from "./astro-paper.config";
 
 export default defineConfig({
@@ -38,6 +39,7 @@ export default defineConfig({
     processor: unified({
       remarkPlugins: [
         remarkToc,
+        remarkCjkSpacing,
         [remarkCollapse, { test: "Table of contents" }],
       ],
     }),
