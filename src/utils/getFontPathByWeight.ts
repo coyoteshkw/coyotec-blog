@@ -8,6 +8,10 @@ export function getFontPathByWeight(
     format?: string;
   }
 ): string | undefined {
+  if (!fonts || !Array.isArray(fonts)) {
+    throw new Error("Font data is missing or invalid. The font may not have been downloaded yet — try restarting the dev server.");
+  }
+
   const style = options?.style ?? "normal";
   const format = options?.format ?? "truetype";
 

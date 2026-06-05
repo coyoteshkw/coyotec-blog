@@ -71,6 +71,14 @@ export default defineConfig({
             styles: ["normal", "italic"],
             formats: ["woff", "ttf"],
           },
+          {
+            name: "Noto Sans SC",
+            cssVariable: "--font-og-cjk",
+            provider: fontProviders.google(),
+            fallbacks: ["sans-serif"],
+            weights: [400, 700],
+            styles: ["normal"],
+          },
         ],
   env: {
     schema: {
