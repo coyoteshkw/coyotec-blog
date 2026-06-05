@@ -44,7 +44,7 @@
     }
 
     img {
-      @apply border-border mx-auto border;
+      @apply border-border mx-auto border rounded-lg;
     }
 
     figcaption {
