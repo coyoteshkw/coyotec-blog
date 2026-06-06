@@ -74,20 +74,12 @@
       @apply border-s-accent/80 wrap-break-word opacity-80 not-italic;
     }
 
-    /* ===== Callouts (rehype-callouts) ===== */
-    .callout {
-      mix-blend-mode: normal;
+    /* Obsidian callout theme uses .dark class but we use data-theme="dark" */
+    [data-theme="dark"] .callout {
+      mix-blend-mode: lighten;
     }
 
-    .callout-content {
-      @apply text-foreground;
-    }
-
-    .callout-content p {
-      @apply text-foreground;
-    }
-
-    details {
+    details:not(.callout) {
       @apply text-foreground inline-block cursor-pointer select-none [&_p]:hidden [&_ul]:my-0!;
     }
 

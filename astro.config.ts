@@ -17,6 +17,7 @@ import {
 } from "@shikijs/transformers";
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import { remarkCjkSpacing } from "./src/utils/remarkCjkSpacing";
+import rehypeCallouts from "rehype-callouts";
 import config from "./astro-paper.config";
 
 export default defineConfig({
@@ -42,6 +43,7 @@ export default defineConfig({
         remarkCjkSpacing,
         [remarkCollapse, { test: "Table of contents" }],
       ],
+      rehypePlugins: [rehypeCallouts],
     }),
     shikiConfig: {
       themes: { light: "min-light", dark: "night-owl" },
