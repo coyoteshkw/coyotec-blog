@@ -4,7 +4,6 @@ modDatetime:
 title: 如何使用雨云开一个 Minecraft 服务器
 featured: true
 draft: false
-ogImage: https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1780672215279_ChatGPT_Image_2026年6月1日_00_07_55.png
 tags:
   - Minecraft
   - 服务器

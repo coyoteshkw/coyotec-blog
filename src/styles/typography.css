@@ -44,7 +44,7 @@
     }
 
     img {
-      @apply border-border mx-auto border rounded-lg transition duration-300 dark:brightness-80;
+      @apply border-border mx-auto border rounded-lg transition duration-300 dark:brightness-85;
     }
 
     figcaption {
@@ -72,6 +72,19 @@
 
     blockquote {
       @apply border-s-accent/80 wrap-break-word opacity-80 not-italic;
+    }
+
+    /* ===== Callouts (rehype-callouts) ===== */
+    .callout {
+      mix-blend-mode: normal;
+    }
+
+    .callout-content {
+      @apply text-foreground;
+    }
+
+    .callout-content p {
+      @apply text-foreground;
     }
 
     details {
