@@ -74,11 +74,6 @@
       @apply border-s-accent/80 wrap-break-word opacity-80 not-italic;
     }
 
-    /* Obsidian callout theme uses .dark class but we use data-theme="dark" */
-    [data-theme="dark"] .callout {
-      mix-blend-mode: lighten;
-    }
-
     details:not(.callout) {
       @apply text-foreground inline-block cursor-pointer select-none [&_p]:hidden [&_ul]:my-0!;
     }

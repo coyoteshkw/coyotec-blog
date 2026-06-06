@@ -11,8 +11,8 @@ tags:
 description: 讲述如何通过Reasonix CLI + DeepSeek搭建圣经打卡应用平台。耗资6块钱，肉痛。
 ---
 
-> [!TIP]
-> 2026-06-06，完成初稿。被files.md吞了一次只好重写。绝望
+> [!NOTE]- 修订记录
+> - 2026-06-06，完成初稿。被files.md吞了一次只好重写。绝望
 
 ## Table of contents
 

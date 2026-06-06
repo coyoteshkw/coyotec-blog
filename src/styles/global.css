@@ -5,6 +5,12 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+/* Obsidian callout theme uses .dark, but we use data-theme="dark".
+   Must be outside @layer — unlayered Obsidian CSS would otherwise win. */
+.callout {
+  mix-blend-mode: normal;
+}
+
 @layer base {
   * {
     @apply border-border outline-accent/75;
