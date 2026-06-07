@@ -11,7 +11,7 @@ POSTS_DIR="src/content/posts"
 
 # ── Modified files: update modDatetime (only when draft is false) ──
 git diff --cached --name-status |
-  grep -i "^M.*${POSTS_DIR}/.*\.md$" |
+  grep -iE "^M.*${POSTS_DIR}/.*\.(md|mdx)$" |
   while read _ file; do
     draft=$(awk '/^---$/{c++;next} c==1 && /^draft:/{print $2;exit}' "$file")
     if [ "$draft" = "false" ]; then
@@ -24,7 +24,7 @@ git diff --cached --name-status |
 
 # ── New files: set pubDatetime ──
 git diff --cached --name-status |
-  grep -i "^A.*${POSTS_DIR}/.*\.md$" |
+  grep -iE "^A.*${POSTS_DIR}/.*\.(md|mdx)$" |
   while read _ file; do
     now=$(date -u "+%Y-%m-%dT%H:%M:%SZ")
     sed "${SED_I[@]}" "/^---$/,/^---$/s/^pubDatetime:.*/pubDatetime: $now/" "$file"
