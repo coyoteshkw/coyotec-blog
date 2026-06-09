@@ -22,12 +22,15 @@ git diff --cached --name-status |
     fi
   done
 
-# ── New files: set pubDatetime ──
+# ── New files: set pubDatetime (only if not already set) ──
 git diff --cached --name-status |
   grep -iE "^A.*${POSTS_DIR}/.*\.(md|mdx)$" |
   while read _ file; do
-    now=$(date -u "+%Y-%m-%dT%H:%M:%SZ")
-    sed "${SED_I[@]}" "/^---$/,/^---$/s/^pubDatetime:.*/pubDatetime: $now/" "$file"
-    git add "$file"
-    echo "  ✓ $file — pubDatetime set"
+    pubDatetime=$(awk '/^---$/{c++;next} c==1 && /^pubDatetime:/{print $2;exit}' "$file")
+    if [ -z "$pubDatetime" ]; then
+      now=$(date -u "+%Y-%m-%dT%H:%M:%SZ")
+      sed "${SED_I[@]}" "/^---$/,/^---$/s/^pubDatetime:.*/pubDatetime: $now/" "$file"
+      git add "$file"
+      echo "  ✓ $file — pubDatetime set"
+    fi
   done
