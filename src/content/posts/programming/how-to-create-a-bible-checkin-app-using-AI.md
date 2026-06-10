@@ -51,10 +51,10 @@ npx skills add anthropics/claude-code
 
 ## Superpower Skill？
 > 参考：
-> [十个顶级 Claude Code Skills，装上就不想卸 - 知乎](https://zhuanlan.zhihu.com/p/2015725269667840386)
-> [Superpowers最佳实践指南-从零到精通的实战手册 - 知乎](https://zhuanlan.zhihu.com/p/2006486697521742162)
+> - [十个顶级 Claude Code Skills，装上就不想卸 - 知乎](https://zhuanlan.zhihu.com/p/2015725269667840386)
+> - [Superpowers最佳实践指南-从零到精通的实战手册 - 知乎](https://zhuanlan.zhihu.com/p/2006486697521742162)
 
-Superpowers 是一套完整的软件开发方法论，适用于您的编码代理，它建立在一组可组合的技能和一些初始指令之上，以确保您的代理能够使用这些技能和指令。**简而言之，用更专业的思维来做整体开发**
+Superpowers 是一套完整的软件开发方法论，它建立在一组可组合的技能和一些初始指令之上，以确保您的代理能够使用这些技能和指令…**简而言之，用更专业的思维来做整体开发**
 
 用`npx skills`安装时会发现superpowers拆分成了很多个小skill，我只安装了五六个
 
@@ -65,6 +65,9 @@ npx skills add obra/superpowers
 ![这应该是早期版本，只有这几个skill](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1780756825853_image.png)
 
 其中我12345都用了。1345最重要
+
+> [!NOTE]
+> 在新版本中还有一个`execute-plans` skill，非测试驱动的会自动调用这个skill，建议安装
 
 装完会在当前项目文件夹下新建一个`.agent/skills`文件夹存放对应的skills。你打开哪个CLI基本都能用他们自己的方式搜到里面的Skills。Reasonix的方法是`/skill show 输入指示（可不写）`。Claude Code CLI的调用方法是直接口头说你要用哪个...我开始的时候找半天怎么用
 
