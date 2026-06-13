@@ -2,7 +2,7 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://coyotec-blog.pages.dev/",
+    url: "https://coyoteshkw.com/",
     title: "萨查日志",
     description: "我的个人记录,编程,折腾,游戏,什么都有",
     author: "coyoteshkw",
