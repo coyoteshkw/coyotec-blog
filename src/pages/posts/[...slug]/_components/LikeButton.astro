@@ -1,0 +1,109 @@
+---
+/**
+ * 点赞按钮组件
+ *
+ * 纯 Astro + vanilla JS，不依赖 React/Svelte/Vue。
+ * 通过 props 接收 pagePath，客户端渲染加载点赞状态。
+ *
+ * @example
+ * <LikeButton pagePath="posts/games/minecraft" />
+ */
+type Props = {
+  /** 文章唯一路径标识，由父组件在构建时传入 */
+  pagePath: string;
+};
+
+const { pagePath } = Astro.props;
+---
+
+<like-button class="like-button-root flex items-center gap-1.5" data-page-path={pagePath}>
+  <button
+    class="like-btn group flex items-center gap-1.5 rounded-md px-2 py-1 text-muted-foreground transition-colors hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+    aria-label={""}
+    disabled
+  >
+    <!-- 爱心 SVG（未点赞：空心描边；已点赞：实心填充） -->
+    <svg
+      class="like-icon size-4 transition-transform group-active:scale-90"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+    <span class="like-count text-sm">⋯</span>
+  </button>
+</like-button>
+
+<script>
+  import { isSupabaseReady, getLikeStatus, toggleLike } from "@/lib/like-api";
+
+  // 隔离作用域，避免与页面其他脚本冲突
+  (function initLikeButtons() {
+    document.addEventListener("astro:page-load", () => {
+      document
+        .querySelectorAll<HTMLElement>("like-button")
+        .forEach(setupLikeButton);
+    });
+  })();
+
+  async function setupLikeButton(el: HTMLElement) {
+    const pagePath = el.dataset.pagePath;
+    if (!pagePath || !isSupabaseReady) {
+      el.querySelector<HTMLButtonElement>(".like-btn")!.style.display = "none";
+      return;
+    }
+
+    const btn = el.querySelector<HTMLButtonElement>(".like-btn")!;
+    const icon = el.querySelector<SVGElement>(".like-icon")!;
+    const countEl = el.querySelector<HTMLElement>(".like-count")!;
+
+    // ---- 1. 初始加载 ----
+    try {
+      const status = await getLikeStatus(pagePath);
+      renderStatus(status);
+    } catch (e) {
+      console.warn("点赞状态加载失败:", e);
+      countEl.textContent = "—";
+    }
+
+    // ---- 2. 绑定点击 ----
+    btn.disabled = false;
+    btn.setAttribute("aria-label", "点赞");
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      try {
+        const status = await toggleLike(pagePath);
+        if (status) renderStatus(status);
+      } catch (e) {
+        console.warn("点赞操作失败:", e);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // ---- 3. 渲染状态 ----
+    function renderStatus(status: { liked: boolean; likeCount: number }) {
+      countEl.textContent = String(status.likeCount);
+      if (status.liked) {
+        icon.setAttribute("fill", "currentColor");
+        btn.classList.add("text-red-500");
+        btn.setAttribute("aria-label", "取消点赞");
+      } else {
+        icon.setAttribute("fill", "none");
+        btn.classList.remove("text-red-500");
+        btn.setAttribute("aria-label", "点赞");
+      }
+    }
+  }
+</script>
+
+<style>
+  /* 自定义元素默认 display: inline（浏览器兼容） */
+  like-button {
+    display: inline-flex;
+  }
+</style>
