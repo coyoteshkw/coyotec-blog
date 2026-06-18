@@ -220,9 +220,12 @@ const { pagePath } = Astro.props;
       b.addEventListener("click", handleLike);
     });
 
-    // 3. 乐观更新 + 后台同步
+    // 3. 乐观更新 + 后台同步（5s 冷却，防连点）
+    const COOLDOWN_MS = 5000;
+    let cooldownTimer: ReturnType<typeof setTimeout> | null = null;
+
     async function handleLike() {
-      if (pending) return;
+      if (pending || cooldownTimer) return;
       const prevLiked = liked;
       const prevCount = likeCount;
 
@@ -249,7 +252,18 @@ const { pagePath } = Astro.props;
       }
       renderAll();
 
+      // 5s 冷却，期间按钮不可操作（添加/取消都是）
+      setCooldown();
+
       function revert() { liked = prevLiked; likeCount = prevCount; }
+    }
+
+    function setCooldown() {
+      [fBtn, iBtn].forEach(b => { b.disabled = true; });
+      cooldownTimer = setTimeout(() => {
+        cooldownTimer = null;
+        [fBtn, iBtn].forEach(b => { b.disabled = false; });
+      }, COOLDOWN_MS);
     }
 
     // 4. 渲染
