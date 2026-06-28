@@ -408,7 +408,7 @@ supabase免费版用量目前来说够用了。
 ## 线上部署：Cloudflare Pages？ Workers？
 Cloudflare Pages是一个面向前端的托管平台，而Workers更进一步，是一个Serverless计算平台。Workers可以做到比Pages更多的事情
 
-Workers的功能更多，可以为Astro搭建简易博客后端，所以我本来是打算部署Workers的。但是部署时出现了报错。
+Workers的功能更多，可以为Astro搭建简易博客后端，可以做更便捷的域名优选，所以我本来是打算部署Workers的。但是部署时出现了报错。
 
 几经波折，发现Astro Paper默认启用的动态OG图片和sitemap功能无法在Workers上生效（SSR），如果想要SSR，必须删除`src/pages/[ogTitle].svg.ts`动态OG图片定义功能，以及在站点地图中自己定义所有路由。否则无法部署Workers。如果不做优选没必要为此大费周章（我的优选😭），所以就用Pages了，期待以后有更好的可以用Workers的Pages主题改版
 
