@@ -23,12 +23,13 @@
 }
 
 /* Dark theme values */
+/* Alternative (green): accent #4ade80, muted #1a2e1a, border #2a3e2a */
 [data-theme="dark"] {
   --background: #212737;
   --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --accent-foreground: #ffffff;
-  --muted: #343f60;
-  --muted-foreground: #afb9ca;
-  --border: #ab4b08;
+  --accent: #c084fc;
+  --accent-foreground: #0a0a1a;
+  --muted: #1a1030;
+  --muted-foreground: #9ca3af;
+  --border: #2a2040;
 }
