@@ -11,6 +11,7 @@ description: 如何用Easybot和QQ实现群服互联
 
 import Spoiler from "@/components/Spoiler.astro"
 import Collapse from "@/components/Collapse.astro"
+import LinkCard from "@/components/LinkCard.astro"
 
 ## 需求分析
 1. 我们都是熟悉的小伙伴，因为宿舍、深夜等原因经常出现「请输入文本」的情况
@@ -18,27 +19,92 @@ import Collapse from "@/components/Collapse.astro"
 3. 游戏的对话无法存留到QQ，一些有趣的故事无法回忆。<Spoiler>实则是无法清算</Spoiler>
 
 <Collapse title="解决方案">
-还能怎么解决呢**当然是原谅啦**
-
-1. 我们都是熟悉的小伙伴，因为宿舍、深夜等原因经常出现「请输入文本」的情况
-2. 可以用QQ和尚在开麦的朋友续聊，但是在玩游戏的时候经常会不注意QQ群消息，一份对话说两遍
-3. 游戏的对话无法存留到QQ，一些有趣的故事无法回忆。<Spoiler>实则是无法清算</Spoiler>
+如果是大型服务器，群服互联的主要用法是防熊验证，但是我们用不太上
 </Collapse>
 
 ## 选型
-1. 有一个MC mod就叫群服互联，但是比较老了，更新缓慢，在mc mod评论区推荐了[Easybot](https://docs.inectar.cn/docs/easybot/intro/)
+1. 有一个MC mod就叫群服互联，但是比较老了，更新缓慢，在mcmod评论区推荐了[Easybot](https://docs.inectar.cn/docs/easybot/intro/)
 2. Easybot有优秀的文档甚至付费支持
 3. 我自己有服务器
 
 ## 安装
-使用Docker，安装本体非常迅速
 
-开放防火墙对应端口，设置密码，确认可访问
+### EasyBot - 服务器端
+EasyBot文档：https://docs.inectar.cn/docs/easybot/quick_start/install_docker/
 
+使用Docker，安装本体非常迅速，文档写的很详细，不再赘述
+
+```sh
+# 安装Docker
+curl -fsSL https://linuxmirrors.cn/docker.sh | sudo bash
+# 数据挂载目录
+sudo mkdir -p /opt/easybot/{data,logs}
+sudo chmod 777 /opt/easybot/{data,logs}
+# 安装轻量版镜像，因为我的服务器也就2G大
+sudo docker pull miuxue/easybot:slim
+# 配置Docker Compose
+services:
+  easybot:
+    #image: miuxue/easybot:slim # 按照刚才下载的镜像填写
+    image: miuxue/easybot:full # 按照刚才下载的镜像填写
+    container_name: easybot
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+      - "26990:26990"
+    volumes:
+      - /opt/easybot/data:/app/appdata
+      - /opt/easybot/logs:/app/logs
+    environment:
+      - TZ=Asia/Shanghai
+# 启动
+cd /opt/easybot & sudo docker compose up -d
+# 检查数据挂载
+ls -l /opt/easybot/{data,logs}
+```
+
+他们官网的这个视频实在是太好笑了
+
+<video playsinline controls style="max-width: 100%; border-radius: 8px;">
+  <source src="https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1783001934312_chrome.webm" type="video/mp4" />
+  您的浏览器不支持视频播放
+</video>
+
+
+开放防火墙对应端口(默认500)，设置密码，确认可访问。登录Token要记一下
+
+### EasyBot - mod端
+我是1.21.1 neoforge模组服，在官网下载对应版本即可
+
+<LinkCard title="EasyBot mod下载" href="https://docs.inectar.cn/docs/easybot/quick_start/plugin/mod/install_mod" image="https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1783003642935_image.png"></LinkCard>
+
+### Napcat
 安装[Napcat](https://napneko.github.io/)，一个QQ机器人的坚实桥梁，“现代化的基于NTQQ的Bot协议端实现”，同样可通过Docker安装
 
-开放对应端口
+<LinkCard title="NapcatQQ" description="现代化的基于 NTQQ 的 Bot 协议端实现" href="https://napneko.github.io/" image="https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1783004495289_image.png"></LinkCard>
 
+## 配置
+
+### Easybot - 服务端
+侧边栏 → 连接管理 → 适配器管理 → 添加Onebot11适配器
+
+设置中WebSocket地址默认为`ws://127.0.0.1/`，修改为Napcat的公网地址+端口
+
+令牌填写Napcat提供的令牌
+
+启用心跳，保持和Napcat一致
+
+### Easybot - 服务器端
+编辑`服务器根目录/config/easybot/config.json`文件，将第一个`ws`(websocket)选项改为Napcat开放端口的IP
+
+```json
+{
+  "ws": "ws://121.196.150.88:26990/bridge",
+  "token": "zsuUa4kp6rrwg7OAUVKVKwt3TIBD0WE2",
+}
+```
+
+### Napcat
 登录需要充当机器人的小号，不要太新最好
 
 在Easybot中添加时出现了问题，两者默认的地址都是127.0.0.1，也不是同一个Docker Compose，不互通
