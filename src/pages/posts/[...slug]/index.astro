@@ -150,6 +150,26 @@ const ogImage = ogImageUrl
 
     <hr class="my-8 border-dashed" />
 
+    {
+      relatedPosts.length > 0 && (
+        <section class="mb-8">
+          <h2 class="text-lg font-bold text-foreground mb-3">See also</h2>
+          <ul class="list-disc pl-5 space-y-1.5 text-foreground/80">
+            {relatedPosts.map((rp) => (
+              <li>
+                <a
+                  href={getPostUrl(rp.id, rp.filePath, locale)}
+                  class="text-accent hover:underline"
+                >
+                  {rp.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
     <EditPost class="sm:hidden" {hideEditPost} {post} />
 
     <BackToTopButton />
@@ -173,26 +193,6 @@ const ogImage = ogImageUrl
     <hr class="my-8 border-dashed" />
 
     <AdjacentPostNav {prevPost} {nextPost} />
-
-    {
-      relatedPosts.length > 0 && (
-        <section class="mt-8">
-          <h2 class="text-xl font-bold text-foreground mb-4">See also</h2>
-          <ul class="list-disc pl-5 space-y-2 text-foreground/80">
-            {relatedPosts.map((rp) => (
-              <li>
-                <a
-                  href={getPostUrl(rp.id, rp.filePath, locale)}
-                  class="text-accent hover:underline"
-                >
-                  {rp.data.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )
-    }
 
     <TocFloating />
     <FancyboxGallery />
