@@ -1,3 +1,16 @@
+/**
+ * 相关文章推荐算法
+ *
+ * 从 Firefly 主题 (github.com/saicaca/fuwari 的 fork) 移植而来
+ * 原作: src/utils/content-utils.ts → getRelatedPosts()
+ *
+ * 适配说明:
+ * - published → pubDatetime (coyotec-blog 的 frontmatter 字段名不同)
+ * - 移除了 category 维度 (coyotec-blog 无此字段)
+ * - 移除了 password 加密文章过滤 (coyotec-blog 无此功能)
+ * - 移除了 PostForList 类型包装，直接返回 CollectionEntry
+ */
+
 import { type CollectionEntry, getCollection } from "astro:content";
 import { postFilter } from "./postFilter";
 
