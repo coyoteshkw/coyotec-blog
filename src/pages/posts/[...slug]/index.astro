@@ -17,6 +17,7 @@ import AdjacentPostNav from "./_components/AdjacentPostNav.astro";
 import TocFloating from "./_components/TocFloating.astro";
 import FancyboxGallery from "@/components/FancyboxGallery.astro";
 import LikeButton from "./_components/LikeButton.astro";
+import { getRelatedPosts as getRelated } from "@/utils/relatedPosts";
 import config from "@/config";
 
 export async function getStaticPaths() {
@@ -60,6 +61,7 @@ type Props = {
 };
 
 const { post, prevPost, nextPost } = Astro.props;
+const relatedPosts = await getRelated(post, 5);
 const locale = Astro.currentLocale ?? config.site.lang;
 
 const {
@@ -171,6 +173,26 @@ const ogImage = ogImageUrl
     <hr class="my-8 border-dashed" />
 
     <AdjacentPostNav {prevPost} {nextPost} />
+
+    {
+      relatedPosts.length > 0 && (
+        <section class="mt-8">
+          <h2 class="text-xl font-bold text-foreground mb-4">See also</h2>
+          <ul class="list-disc pl-5 space-y-2 text-foreground/80">
+            {relatedPosts.map((rp) => (
+              <li>
+                <a
+                  href={getPostUrl(rp.id, rp.filePath, locale)}
+                  class="text-accent hover:underline"
+                >
+                  {rp.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
 
     <TocFloating />
     <FancyboxGallery />
