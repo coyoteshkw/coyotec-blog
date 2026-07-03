@@ -89,9 +89,53 @@ ls -l /opt/easybot/{data,logs}
 
 <LinkCard title="NapcatQQ" description="现代化的基于 NTQQ 的 Bot 协议端实现" href="https://napneko.github.io/" image="https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1783004495289_image.png"></LinkCard>
 
+同样使用Docker安装，具体步骤在EasyBot文档中已经写了，不再赘述，我保持和EB一致，放在`/opt/napcat`下
+
+```yml
+# docker-compose.yml
+version: "3"
+services:
+  napcat:
+    environment:
+      - NAPCAT_UID=${NAPCAT_UID}
+      - NAPCAT_GID=${NAPCAT_GID}
+    ports:
+      - 3000:3000
+      - 3001:3001
+      - 6099:6099
+    container_name: napcat
+    network_mode: bridge
+    restart: always
+    image: mlikiowa/napcat-docker:latest
+```
+
+运行
+
+```sh
+NAPCAT_UID=$(id -u) NAPCAT_GID=$(id -g) docker-compose up -d
+```
+
 ## 配置
 
-### Easybot - 服务端
+### Napcat
+登录配置页面需要登录密码，默认密码在Docker日志里，不会的话抓个AI教你提出来，然后牢牢记住(使用密码管理器之类)
+
+需要充当机器人的小号，不要太新最好，新号更容易被抓
+
+> [!NOTE]
+> 如果登录不上去就是被腾讯gank了，右上角重启再扫码才能登上去
+
+登录成功后侧边栏选「网络配置」，添加Websocket服务器
+
+名称随便写写，端口号填之前开放的3001，token自己设置，心跳我设置了20000
+
+![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1783086687074_image.png)
+
+### Easybot - 网页端
+侧边栏 → 连接管理 → 服务器管理 → 添加服务器
+
+这里的「身份令牌」在mc服务器端使用
+
 侧边栏 → 连接管理 → 适配器管理 → 添加Onebot11适配器
 
 设置中WebSocket地址默认为`ws://127.0.0.1/`，修改为Napcat的公网地址+端口
@@ -105,24 +149,29 @@ ls -l /opt/easybot/{data,logs}
 
 ```json
 {
-  "ws": "ws://121.196.150.88:26990/bridge",
-  "token": "zsuUa4kp6rrwg7OAUVKVKwt3TIBD0WE2",
+  "ws": "ws://Napcat在服务器中开放的IP:60099/bridge",
+  "token": "在EB网页端创建服务器时的token",
 }
 ```
 
-### Napcat
-登录需要充当机器人的小号，不要太新最好
+保存后自动重载，检查网页端有没有连接上
 
-在Easybot中添加时出现了问题，两者默认的地址都是127.0.0.1，也不是同一个Docker Compose，不互通
+连接完毕后，将你在Napcat登录，又绑定到EB网页端的小号加入需要通信的QQ群中
 
-解决方法：开放Napcat端口，把EB中的地址换成网络地址
+回到侧边栏 → 核心设置 → 群服互通，同步选项中选择对应的服务器（这里很有迷惑性，如果你不选下面的骨架屏就会一直转，还以为是在加载）
 
-有更好的解决办法，但是没有尝试，能用就行
+如果一切都没问题，这里应该会显示你把小号添加到的群组，根据自己的需求开启对应的同步选项即可。我希望每一条消息都同步，所以选择「全部同步」
 
-连接完毕后，将小号加入需要通信的QQ群中，EB设置里开启群服互联功能，开启全部信息通信
-即可正常工作
+![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1783088197017_image.png)
+
+> [!WARNING]
+> 梳理：
+> - Napcat生成的令牌给EB适配器管理的网页端
+> - EB服务器管理生成的令牌给MC服务端
+> - EB适配器管理要使用Napcat的公网地址
+> - 默认不同步全部消息，要自己设置
 
 ## 问题
 - 小号掉线后，必须在Napcat设置里重新启动才能登录，无法使用快速登录功能，会显示账号二维码已经过期，暂不知如何解决
 - EB在和Napcat设置心跳相同后不容易掉线，但是一旦掉了很难发现，需要检查
-- 目前测试下来前期小号被腾讯gank的概率有点高，后面好些了，尚在观察中
+- 目前测试下来前期小号被腾讯gank的概率有点高，后期会好很多，可以自己多稍微登录互动一下
