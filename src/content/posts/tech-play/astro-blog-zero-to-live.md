@@ -24,7 +24,7 @@ Astro 是一个集多功能于一体的 Web 框架。访问速度快，内容驱
 ## Astro Paper
 [Github地址在这里](https://github.com/satnaing/astro-paper)。极简风格，SEO友好（虽然在发布的时候我的站点还在遥远的沙盒里挂着，但我如此坚信），速度快，过渡效果优秀不出错。
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781589362764_image.png)
+![image.png](https://img.055933.xyz/file/1781589362764_image.png)
 
 **过渡效果优秀**这一点值得单独提一下，因为我的另一个站点[萨查周记](https://coyotec-weekly.pages.dev)本来是打算用[Astro Cactus](https://astro-cactus.chriswilliams.dev/)这个主题的，但是在Vibe Coding改造后，发现在本地运行时暗黑模式下，链接跳转会全屏放闪光弹，给所有人吃高闪。
 
@@ -32,7 +32,7 @@ Astro 是一个集多功能于一体的 Web 框架。访问速度快，内容驱
 
 ## 下载
 有几种方式。我直接在GitHub上把仓库注册为模板
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781589787922_image.png)
+![image.png](https://img.055933.xyz/file/1781589787922_image.png)
 也可以用官方提供的方法，通过astro模板命令创建
 
 ```bash
@@ -245,7 +245,7 @@ USE_LOCAL_FONTS=true pnpm dev
 
 动态 OG 图片（OG 是 Open Graph 的缩写）指在网页分享时自动抓取的动态封面图，通常为 GIF 格式，用于提升社交平台（如微信、微博）的分享吸引力。**简而言之，在某些平台上，你分享出去除了一个干巴巴的链接，还会显示一个标题、你填写的简介和你的封面，这样别人就会更愿意点进这个链接，而不会怀疑你是一个钓鱼网站准备从中骗走money**
 
-![一张分享到社交媒体网站的OG图片和OG标题、简介实例](https://a692b0fb.Cloudflare-imgbed-czl.pages.dev/file/1781690966165_0e23bf13c57f4af704412721814b4666_720.png)
+![一张分享到社交媒体网站的OG图片和OG标题、简介实例](https://img.055933.xyz/file/1781690966165_0e23bf13c57f4af704412721814b4666_720.png)
 
 理论上，你可以在每篇文章中自己做一个OG图片，这样就不需要动态OG图了。但是我用的Cloudflare+telegram图床在这方面有加载速度上的劣势，有时网站因为图片半天没加载出来，默认了我没有这张图然后白屏，就很抓狂。这个时候发现还不如用动态OG图呢，好歹人真的看得见。或者，你不担心图片在仓库中膨胀，也可以直接在仓库中放封面图，同样也没有这个问题。
 
@@ -328,7 +328,7 @@ export function parseFontUrls(css: string): { weight: number; url: string }[] {
 ### 5. logo，favicon
 本来是想让AI生成一个图标，但是它生成的图标都太大了，压缩不下来。网站刚上线，不希望在这些地方花费大量的时间，最终我在 [Svgrepo网站](https://www.svgrepo.com/)挑选了一条小狼图片。很推荐这个网站，图标全都允许商用，而且种类丰富，光wolf就能搜出几十个来
 
-![SVGRepo网站](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781694138163_image.png)
+![SVGRepo网站](https://img.055933.xyz/file/1781694138163_image.png)
 
 但是这个favicon在上线后，发现虽然在PC浏览器上能看见，在手机上却看不见。一开始以为是缓存问题，换了好几个浏览器，还是一样。最后发现是因为图标用的是svg格式，而*手机浏览器普遍对svg的支持不是很好*，所以没解析出来
 
@@ -342,7 +342,7 @@ export function parseFontUrls(css: string): { weight: number; url: string }[] {
 ### 6. 文章中英文空格问题
 这也是一个由于Google Sans Code字体闹出的麻烦，等宽字体的空格很大，因此我原本的老方案：在本地写完后丢给Obsidian的Pangu插件添加一下空格再丢回来完事，就变得完全不可用。这个空格实在是太宽了
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781694584371_image.png)
+![image.png](https://img.055933.xyz/file/1781694584371_image.png)
 
 于是让Pi Coding Agent写了一个插件，自动在中英文之间添加一个瘦空格，视觉效果上比等宽空格要好很多，而且不用手动添加空格了
 
@@ -383,11 +383,11 @@ rehype-callouts使用  `.dark` 类切换暗色模式，但Paper使用 `data-them
 
 默认页面太平淡了，添加一个点赞按钮好很多（浏览量就不加了）。数据库参考了这篇博客：[实践-给 Astro 静态博客加上浏览量和点赞 - 藤君的小窝](https://blog.stivine.fun/posts/practice-add-view-count-and-likes-to-an-astro-static-blog/)，用了supabase远程数据库，原文用了Svelte写组件，我不想引入额外的内容所以直接让Deepseek用Astro写。点赞按钮样式参考了[这个博客](https://www.bayunmoyu.com/posts/astro-url-slug/)
 
-![supabase这个banner翻译过来怎么是周末建造.jpg](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781793678288_image.png)
+![supabase这个banner翻译过来怎么是周末建造.jpg](https://img.055933.xyz/file/1781793678288_image.png)
 
 supabase免费版用量目前来说够用了。
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781877386322_image.png)
+![image.png](https://img.055933.xyz/file/1781877386322_image.png)
 
 如果你fork了我的仓库，在Cloudflare或者你想托管的网站里，创建时需要添加两个环境变量，对应的值如下图
 
@@ -395,15 +395,15 @@ supabase免费版用量目前来说够用了。
 | ------- | ------- |
 | PUBLIC_SUPABASE_ANON_KEY   | 对应的Key  |
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781877635697_image.png)
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781877516508_image.png)
+![image.png](https://img.055933.xyz/file/1781877635697_image.png)
+![image.png](https://img.055933.xyz/file/1781877516508_image.png)
 
 原文手机端直接没有点赞了，我写了一个放在文末。再额外写了一个小功能：文章浏览过半时，点赞按钮会弹出一个气泡框鼓励用户交互^\_^，如果用户点击了就会提示谢谢~然后消失。如果什么都不做等10s后也会消失。移动端只有划到底部按钮可视时才会提示可点赞，因为本身就有一个回到顶部+目录按钮，再加一个直接失去美感了
 
 我觉得实际效果还是不错的。目前就这样吧:D
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781793802984_image.png)
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781793834564_image.png)
+![image.png](https://img.055933.xyz/file/1781793802984_image.png)
+![image.png](https://img.055933.xyz/file/1781793834564_image.png)
 
 ## 线上部署：Cloudflare Pages？ Workers？
 Cloudflare Pages是一个面向前端的托管平台，而Workers更进一步，是一个Serverless计算平台。Workers可以做到比Pages更多的事情
@@ -432,40 +432,40 @@ Workers的功能更多，可以为Astro搭建简易博客后端，可以做更�
 
 打开Cloudflare，没注册账号的注册一下。点选侧边栏「Workers和Pages」
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781876812092_image.png)
+![image.png](https://img.055933.xyz/file/1781876812092_image.png)
 
 现在Cloudflare大力推Workers，添加Pages得选下面这个：
 
-![选Pages](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1782034561981_2026-06-19T13-48-25-353Z.png)
+![选Pages](https://img.055933.xyz/file/1782034561981_2026-06-19T13-48-25-353Z.png)
 
 点击「导入现有Git仓库」，选择对应的存储库，再点击开始设置
 
 构建设置中「框架设置」选Astro，命令改成`pnpm build`
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781877942348_image.png)
+![image.png](https://img.055933.xyz/file/1781877942348_image.png)
 
 点击保存并部署，等待部署完毕即可得到一个上线网站！
 
 ## Pages自定义域添加域名，开启小黄云
 之前添加的域名可以趁早绑定，在侧边栏处选择「域名」「添加域名」
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781878120260_image.png)
+![image.png](https://img.055933.xyz/file/1781878120260_image.png)
 
 点击连接域名，如果对AI有意见的下面的选项记得看一下，然后选择免费套餐。默认情况下会搜索一些你之前配置的DNS什么的，看不懂也可以暂时跳过，直接「前往激活」，会给你两个Cloudflare 名称服务器
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781878356417_image.png)
+![image.png](https://img.055933.xyz/file/1781878356417_image.png)
 
 打开spaceship，进入域名管理器
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781878445698_image.png)
+![image.png](https://img.055933.xyz/file/1781878445698_image.png)
 
 点击名称服务器与DNS
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781878617560_image.png)
+![image.png](https://img.055933.xyz/file/1781878617560_image.png)
 
 更改自定义名称服务器，填入即可
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781878839190_image.png)
+![image.png](https://img.055933.xyz/file/1781878839190_image.png)
 
 保存后回到Cloudflare，选择「我已更新名称服务器」，等待一段时间确定域名已经托管给Cloudflare。通常在1小时以内完成
 
@@ -473,7 +473,7 @@ Workers的功能更多，可以为Astro搭建简易博客后端，可以做更�
 
 如果不做域名优选，我测试下开启小黄云比不开效果好一点，所以开启了。不确定是否开启就回到域名处确定代理状态
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781879441392_image.png)
+![image.png](https://img.055933.xyz/file/1781879441392_image.png)
 
 > [!NOTE]
 > 因为我还有周记，所以还添加了子域名，用作区分
@@ -483,7 +483,7 @@ Workers的功能更多，可以为Astro搭建简易博客后端，可以做更�
 ## 谷歌收录、必应收录
 等谷歌和其他搜索引擎自己搜索到我们的网站不知道何年何月，手动催促一下。打开[Google Search Console](https://search.google.com/search-console)。这里选择网址前缀而不是网域，这样可以单独观测不同子域名下的流量动态
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1781880940821_image.png)
+![image.png](https://img.055933.xyz/file/1781880940821_image.png)
 
 Astro Paper在配置文件中提供HTML标记验证法的对应选项，所以我直接选了这种方法。也可以用Cloudflare直接验证
 
@@ -494,15 +494,15 @@ export default defineAstroPaperConfig({
   },
 ```
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1782028598467_image.png)
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1782029091709_image.png)
+![image.png](https://img.055933.xyz/file/1782028598467_image.png)
+![image.png](https://img.055933.xyz/file/1782029091709_image.png)
 
 为了加快文章收录，在「站点地图」处提交我们的sitemap。
 
 > [!WARNING] 
 > 用Paper主题的话提交 `sitemap-index.xml` 而不是 `sitemap.xml`
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1782029664010_image.png)
+![image.png](https://img.055933.xyz/file/1782029664010_image.png)
 
 由于谷歌的奇妙收录机制，即使提交后状态显示为「无法读取」也不要惊慌，是正常的，只要确定站点地图链接可以正常访问即可。如果有旧文需要搬迁的情况下，可以先把旧文搬运过来，这样会提高索引到的概率（大概，因为我的周记目前只有两篇文章，主站有五六篇，主站一次提交就索引到了全部页面，在一到两周内就可以在搜索结果中被展示，而周记至今仍然只有主页可以被很好地索引到）
 
@@ -515,15 +515,15 @@ Cloudflare提供批量重定向方式，可以将某个域名和其下的所有�
 
 打开cf面板「交付与性能」下第一项，先添加一个批量重定向列表
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1782030794841_image.png)
+![image.png](https://img.055933.xyz/file/1782030794841_image.png)
 
 点击下一步后可能会发现CF抽风显示一个你没保存，其实保存了不用管，直接确定进下一步，选择手动添加URL重定向。在编辑参数中勾选全部
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1782031027700_image.png)
+![image.png](https://img.055933.xyz/file/1782031027700_image.png)
 
 然后你要再创建一个「批量重定向规则」（刚才那个是批量重定向规则「列表」），选择刚才创建的列表，保存并部署即可。几分钟后可以测试是否成功
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1782031196734_image.png)
+![image.png](https://img.055933.xyz/file/1782031196734_image.png)
 
 ## 附录2：图床推荐
 
@@ -533,7 +533,7 @@ Cloudflare提供批量重定向方式，可以将某个域名和其下的所有�
 
 不过很有趣的是在搬迁旧文的过程中，我发现我18年写的小文章，里面的图片居然还能访问，由此找到了这个[路过图床](https://imgchr.com/)，我认为在8年过后还可访问证明了它的实力，但各种性能就自行判断吧
 
-![image.png](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1782032532524_image.png)
+![image.png](https://img.055933.xyz/file/1782032532524_image.png)
 
 ## 附录3：个人写文章流程
 基本过程：**files.md内写完 → neovim内看排版 → 博客内格式精修 → 发布**
