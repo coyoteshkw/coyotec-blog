@@ -64,3 +64,5 @@ Example 12: :link[Vite]{id=@vitejs img=https://vitejs.dev/logo.svg}
 
 Example 1: :badge[New]
 Example 2: :badge[Success]{style="color: black; background-color: #aaf233"}
+
+:::github{repo="withastro/astro"}

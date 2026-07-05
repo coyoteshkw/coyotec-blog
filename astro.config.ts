@@ -45,8 +45,8 @@ export default defineConfig({
     processor: unified({
       remarkPlugins: [
         remarkDirective,
-        [remarkDirectiveSugar, { link: { faviconSourceUrl: "https://faviconsnap.com/api/favicon?url={domain}" } }],
         parseDirectiveNode,
+        [remarkDirectiveSugar, { link: { faviconSourceUrl: "https://faviconsnap.com/api/favicon?url={domain}" } }],
         remarkToc,
         remarkCjkSpacing,
         [remarkCollapse, { test: "Table of contents" }],
