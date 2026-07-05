@@ -59,11 +59,11 @@ pnpm dev
 ## 改造
 
 ### 1. 基础部分
-基础部分在官方Readme上说的很清楚，要修改的地方集中在`astro-paper.config.ts`和`astro.config.ts`两个文件，没什么难点。第一次使用的话，可能要注意一下SEO友好，也别彻底放飞自我瞎写（说的我自己，博客园的副标题一直用的写点啥，结果到现在还是写点啥，你倒是写点啥啊！）
+基础部分在官方Readme上说的很清楚，要修改的地方集中在 `astro-paper.config.ts` 和 `astro.config.ts` 两个文件，没什么难点。第一次使用的话，可能要注意一下SEO友好，也别彻底放飞自我瞎写（说的我自己，博客园的副标题一直用的写点啥，结果到现在还是写点啥，你倒是写点啥啊！）
 
 url我默认填了Cloudflare的地址，第一次用的还没有地址，也没想好要放在哪里托管的话，可以先不填。其他需要地址的地方同理。
 
-`lang`处先保持默认的`en`，否则尝试启动项目时会出错，后续再进行处理。
+`lang` 处先保持默认的 `en` ，否则尝试启动项目时会出错，后续再进行处理。
 
 ```ts file="astro-paper.config.ts"
 import { defineAstroPaperConfig } from "./src/types/config";
@@ -114,7 +114,7 @@ export default defineAstroPaperConfig({
 
 ```
 
-features的editPost属性指的是文章页面的`Edit post`按钮，填对了以后点击会跳转到Github上这篇文章的编辑页面，前提是你是仓库的使用者并且已经登录。
+features的editPost属性指的是文章页面的 `Edit post` 按钮，填对了以后点击会跳转到Github上这篇文章的编辑页面，前提是你是仓库的使用者并且已经登录。
 
 ```js file="astro-paper.config.ts"
 editPost: {
@@ -125,7 +125,7 @@ editPost: {
 
 基本格式是`https://github.com/username/仓库名/edit/正在使用的仓库/"
 
-`astro.config.ts` 部分可以做本地化，默认只有英文。在`locales`处先添加`zh-CN`
+`astro.config.ts` 部分可以做本地化，默认只有英文。在 `locales` 处先添加 `zh-CN`
 
 ```ts
   i18n: {
@@ -139,9 +139,9 @@ editPost: {
 ```
 
 ### 2. 启动项目
-`pnpm dev`启动项目。在大陆，受限于网络环境，在启动时很可能遇到谷歌字体狂转圈的情况。虽然在上线后没有影响，但是不方便调试。
+`pnpm dev` 启动项目。在大陆，受限于网络环境，在启动时很可能遇到谷歌字体狂转圈的情况。虽然在上线后没有影响，但是不方便调试。
 
-我的方法是，先把需要的字体`Google Sans Code`下载安装到本地，然后添加一个USE_LOCAL_FONTS变量，在`Layout.astro`和`Fonts.css`处根据变量是否启用来决定是否使用网络字体。
+我的方法是，先把需要的字体 `Google Sans Code` 下载安装到本地，然后添加一个USE_LOCAL_FONTS变量，在 `Layout.astro` 和 `fonts.css` 处根据变量是否启用来决定是否使用网络字体。
 
 ```js file="src/layouts/Layout.astro"
 ---
@@ -236,9 +236,9 @@ USE_LOCAL_FONTS=true pnpm dev
 ### 3. 中文本地化
 官方支持i18n，但是没有自带的多语言翻译，得自己写。
 
-我觉得默认的英文字体很好看，引入中文字体一个没弄好容易拖慢网页加载速度，所以没有在主站使用。但是在weekly周记站点我修改了部分英文。具体方法：在`src/i18n/lang`文件夹下添加`zh-CN.ts`文件，对照`en.ts`一比一翻译成中文。
+我觉得默认的英文字体很好看，引入中文字体一个没弄好容易拖慢网页加载速度，所以没有在主站使用。但是在weekly周记站点我修改了部分英文。具体方法：在 `src/i18n/lang` 文件夹下添加 `zh-CN.ts` 文件，对照 `en.ts` 一比一翻译成中文。
 
-但是也有很不好汉化的地方，默认的目录生成方式是在需要生成的地方输入一个二级标题`##Table of contents`，但是它在生成以后也叫这个，无法直接翻译，要翻译得改这个组件的源代码，我觉得没必要，就保留了。
+但是也有很不好汉化的地方，默认的目录生成方式是在需要生成的地方输入一个二级标题 `##Table of contents` ，但是它在生成以后也叫这个，无法直接翻译，要翻译得改这个组件的源代码，我觉得没必要，就保留了。
 
 ### 4. 动态OG图片中文修复
 **什么是动态OG图片？**
@@ -263,7 +263,7 @@ fonts: [
 
 ```
 
- 新增`src/utils/getGoogleFontCss.ts`，从 Google Fonts API 拉取 CSS，解析出字体文 
+ 新增 `src/utils/getGoogleFontCss.ts` ，从 Google Fonts API 拉取 CSS，解析出字体文 
  件 URL，返回给 Satori 使用。不依赖 Astro 的 <Font> 组件（那个只在模  
  板里生效，Satori 是服务端渲染用不上）。
  
@@ -361,7 +361,7 @@ Paper文档说现在支持了Obsidian的callout格式，我真信了，弄了半
 
 rehype-callouts使用  `.dark` 类切换暗色模式，但Paper使用 `data-theme="dark"` 属性。`.dark .callout` 选择器永远匹配不到，导致 `mix-blend-mode: darken` 在暗色模式下仍然生效，将浅色文字混合为深色后融入背景。
     
-修复方法：在 `global.css` 的 @layer 外部设置 `.callout { mix-blend-mode: normal }`。必须放在 @layer 外，因为 Obsidian 主题 CSS 不在任何 cascade layer 内，无 layer 样式优先级高于 @layer 内样式。
+修复方法：在 `global.css` 的 @layer 外部设置 `.callout { mix-blend-mode: normal }` 。必须放在 @layer 外，因为 Obsidian 主题 CSS 不在任何 cascade layer 内，无 layer 样式优先级高于 @layer 内样式。
 
 ```css file="src/styles/global.css"
 .callout {
@@ -405,15 +405,26 @@ supabase免费版用量目前来说够用了。
 ![image.png](https://img.055933.xyz/file/1781793802984_image.png)
 ![image.png](https://img.055933.xyz/file/1781793834564_image.png)
 
+### 9. md功能拓展
+:link[remark-directive-sugar]{id=https://github.com/lin-stephanie/remark-directive-sugar}是一个remark插件，拓展了默认md的功能
+
+提供 `:link`、`:badge`、`::video-`、`:::image-` 四种拓展语法，具体可以看这篇[测试文章](https://coyoteshkw.com/posts/tech-play/remark-directive-sugar-test/)
+
+自定义链接卡片我换了默认的duckduckgo favicon接口，可以在中国大陆地区接收图标，但是其他的默认Github图标就不太好改了，所以我一律使用下列语法
+
+```
+:link[名称]{id=网站}
+```
+
 ## 线上部署：Cloudflare Pages？ Workers？
 Cloudflare Pages是一个面向前端的托管平台，而Workers更进一步，是一个Serverless计算平台。Workers可以做到比Pages更多的事情
 
 Workers的功能更多，可以为Astro搭建简易博客后端，可以做更便捷的域名优选，所以我本来是打算部署Workers的。但是部署时出现了报错。
 
-几经波折，发现Astro Paper默认启用的动态OG图片和sitemap功能无法在Workers上生效（SSR），如果想要SSR，必须删除`src/pages/[ogTitle].svg.ts`动态OG图片定义功能，以及在站点地图中自己定义所有路由。否则无法部署Workers。如果不做优选没必要为此大费周章（我的优选😭），所以就用Pages了，期待以后有更好的可以用Workers的Pages主题改版
+几经波折，发现Astro Paper默认启用的动态OG图片和sitemap功能无法在Workers上生效（SSR），如果想要SSR，必须删除 `src/pages/[ogTitle].svg.ts` 动态OG图片定义功能，以及在站点地图中自己定义所有路由。否则无法部署Workers。如果不做优选没必要为此大费周章（我的优选😭），所以就用Pages了，期待以后有更好的可以用Workers的Pages主题改版
 
 ## Spaceship域名购买
-本来是打算使用默认的Cloudflare Pages域名的，为此特意让域名看起来很好看：`coyotec-blog.pages.dev`和`coyotec-weekly.pages.dev`
+本来是打算使用默认的Cloudflare Pages域名的，为此特意让域名看起来很好看： `coyotec-blog.pages.dev` 和 `coyotec-weekly.pages.dev`
 
 但谷歌迟迟不收录我的sitemap文件，显示「无法读取」。在很多的搜索和AI会诊后，有一个可能性浮出水面：默认域名可能意味着它对互联网的重要性不够高，所以会延后收录，即使我的sitemap文件明明填的一点错没有，它仍可能显示无法读取状态数周。最后一根稻草是我有一个Tiddlywiki博客，多个月后也仍是无法读取状态（后续经过沟通，知道了是TW静态站点确实有一个sitemap的问题，和谷歌收录不收录关系不一定很大）
 
@@ -440,7 +451,7 @@ Workers的功能更多，可以为Astro搭建简易博客后端，可以做更�
 
 点击「导入现有Git仓库」，选择对应的存储库，再点击开始设置
 
-构建设置中「框架设置」选Astro，命令改成`pnpm build`
+构建设置中「框架设置」选Astro，命令改成 `pnpm build`
 
 ![image.png](https://img.055933.xyz/file/1781877942348_image.png)
 
@@ -542,6 +553,6 @@ files.md是一个浏览器内markdown软件，可同步到本地。非常轻量�
 
 但是因为很精简，也没有显示行数的功能，有些细碎的排版比如图片上下空一行，很难看出来，在neovim里面过一遍更好，如果懒就直接让AI加空格
 
-发布后时不时回看一下博客，如果有发现错字或需要补充的内容，通过`Edit`按钮在博客内精修，有大量内容的话补充回原文章（复制） → git push → 如果在Github上修改了，本地先pull一下再push。如果没有pull就提交了，那就pull --rebase
+发布后时不时回看一下博客，如果有发现错字或需要补充的内容，通过 `Edit` 按钮在博客内精修，有大量内容的话补充回原文章（复制） → git push → 如果在Github上修改了，本地先pull一下再push。如果没有pull就提交了，那就pull --rebase
 
 > files.md更像是我的个人记事本，而blog项目内都是真的要发布的文章，所以它们之间是我手动同步的，而不是用同一个仓库
