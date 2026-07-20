@@ -1,0 +1,100 @@
+---
+pubDatetime: 2026-07-21T00:30:00.000+08:00
+title: 海豹私骰Linux搭建教程，以及报错处理
+featured: false
+draft: false
+tags:
+  - 跑团
+  - COC
+description: 如何快速搭建和迁移海豹骰QQ Bot
+---
+
+import LinkCard from '../../../components/LinkCard.astro'
+
+在一个风雨交加的周末，愉快的跑团开始前，我们的骰子炸了——机器人鼠鼠没掉，但是签名服务延迟999ms了。去官方群里了解到需要下载安装测试版，于是写一篇文章重新梳理安装流程，方便以后使用
+
+> [!WARNING]
+> 本文假定你至少有一台Linux服务器，至少知道/或可以用豆包知道如何操作Linux系统进行简单的上传/解压/提权操作
+> 
+> 我在阿里云服务器上部署，发行版是Alibaba Cloud Linux，使用dnf作为包管理器
+
+## 下载
+
+**什么是海豹骰？**
+
+SealDice（海豹骰）是一款专为 TRPG(桌上角色扮演游戏)玩家开发的开源骰子机器人，可部署在 QQ、KOOK、Discord 等即时聊天平台，为线上跑团提供掷骰、技能检定、人物卡管理、日志记录（Log）以及自定义扩展等全套辅助功能。在国内的线上TRPG玩家中广受欢迎。[^1]
+
+[^1]: 引用自海豹骰官方说明
+
+<LinkCard href="https://docs.sealdice.com/deploy/quick-start.html" title="海豹手册"/>
+
+在[Github Realease](https://github.com/sealdice/sealdice-build/releases)下载最新开发版Latest Dev。我下载linux_amd64版本
+
+上传到服务器，我在用Mac + iterm2，使用了iterm2-zmodem脚本，在item2上用sz指令上传。也可以使用scp指令直接上传到执行位置，二者没区别
+
+ssh进入服务器，解压tar.gz文件到指定目录。要求先创建好目录，否则会解压在当前目录下，满地都是
+
+```bash
+mkdir sealdice
+tar -xzvf sealdice_20260704-0038079_linux_amd64.tar.gz -C sealdice/
+```
+
+cd进入文件夹，确定解压的文件在创建的`sealdice`目录下，没有在内部创建一个新的`sealdice`文件夹
+
+## 启动
+确定自己在`sealdice`目录下，给予`sealdice-core`权限
+
+```bash
+pwd # 输出~/sealdice
+chmod +x ./sealdice-core
+```
+
+启动海豹
+
+```bash
+./sealdice-core
+```
+
+默认在3211端口运行，打开服务器防火墙放行对应端口，即可访问海豹骰后台
+
+![海豹骰后台](https://img.055933.xyz/file/1784563395763_image.png)
+
+根据要求设定访问密码避免互联网裸奔
+
+## 配置
+此时退出服务器会导致海豹退出，使用<kbd>Ctrl</kbd> + <kbd>C</kbd>命令退出海豹骰
+
+海豹提供了安装到系统服务的脚本，在sudo下运行
+
+```bash
+./sealdice-core -i
+```
+
+来安装系统服务
+
+> 如果安装是为了迁移，千万记得在运行新的海豹之前停止之前已经运行的海豹，并卸载系统指令。详情见下文
+
+## 与QQ连接
+
+在海豹后台选择「账号设置」，添加一个账号。由于内置客户端的签名服务超时，我切换账号类型为**内置Milky**，账号填写需要充当机器人的QQ号(不建议使用日常用的大号)，登录即可，豪简单～豪轻松～
+
+将机器人拉入一个测试群，输入`.jrrp`，如果有输出即可正常使用。具体配置可以直接看后台每个设置项旁边的小问号或者看海豹文档
+
+## 迁移
+
+官网关于迁移只有一句话：*海豹核心的数据文件全平台通用。因此，在不同平台间迁移时，你只需要准备每个平台的可执行文件。*
+
+太好了像没说一样😄，如果我全复制过来那个还算升级了吗(。因此去官方群里求助了，得到了答案，复制`Data`文件夹即可。
+
+先把当前因为测试运行时已经生成的Data文件删除，随后整个复制过来。
+
+我第一次运行海豹时遇见了一些权限问题，因此在复制过来的时候提示`_index`和一些导出的log文件我没有权限。我重新删除了复制过来的Data文件——并确定后台已经停止了海豹运行，然后回到原目录输入指令给予权限
+
+```bash
+# 查看你当前用户名
+whoami
+# 递归修改归属（替换yourname为whoami输出的名字）
+sudo chown -R yourname:yourname ../sealdice-bak
+```
+
+之后再复制就没有问题了。
