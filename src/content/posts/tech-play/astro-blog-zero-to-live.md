@@ -123,7 +123,7 @@ editPost: {
 },
 ```
 
-基本格式是`https://github.com/username/仓库名/edit/正在使用的仓库/"
+基本格式是`https://github.com/username/仓库名/edit/正在使用的仓库/`
 
 `astro.config.ts` 部分可以做本地化，默认只有英文。在 `locales` 处先添加 `zh-CN`
 
@@ -141,7 +141,7 @@ editPost: {
 ### 2. 启动项目
 `pnpm dev` 启动项目。在大陆，受限于网络环境，在启动时很可能遇到谷歌字体狂转圈的情况。虽然在上线后没有影响，但是不方便调试。
 
-我的方法是，先把需要的字体 `Google Sans Code` 下载安装到本地，然后添加一个USE_LOCAL_FONTS变量，在 `Layout.astro` 和 `fonts.css` 处根据变量是否启用来决定是否使用网络字体。
+我的方法是，先把需要的字体 `Google Sans Code` 下载安装到本地，然后添加一个 `USE_LOCAL_FONTS` 变量，在 `Layout.astro` 和 `fonts.css` 处根据变量是否启用来决定是否使用网络字体。
 
 ```js file="src/layouts/Layout.astro"
 ---
@@ -243,7 +243,7 @@ USE_LOCAL_FONTS=true pnpm dev
 ### 4. 动态OG图片中文修复
 **什么是动态OG图片？**
 
-动态 OG 图片（OG 是 Open Graph 的缩写）指在网页分享时自动抓取的动态封面图，通常为 GIF 格式，用于提升社交平台（如微信、微博）的分享吸引力。**简而言之，在某些平台上，你分享出去除了一个干巴巴的链接，还会显示一个标题、你填写的简介和你的封面，这样别人就会更愿意点进这个链接，而不会怀疑你是一个钓鱼网站准备从中骗走money**
+动态 OG 图片（OG 是 Open Graph 的缩写）指在社交媒体或通讯软件上分享网页链接时，系统通过代码自动生成一张大图附在链接中，提高用户的点击率。**简而言之，在某些平台上，你分享出去除了一个干巴巴的链接，还会显示一个标题、你填写的简介和你的封面，这样别人就会更愿意点进这个链接，而不会怀疑你是一个钓鱼网站准备从中骗走money**
 
 ![一张分享到社交媒体网站的OG图片和OG标题、简介实例](https://img.055933.xyz/file/1781690966165_0e23bf13c57f4af704412721814b4666_720.png)
 
@@ -251,7 +251,7 @@ USE_LOCAL_FONTS=true pnpm dev
 
 说这么多是因为，在解决这个问题上花了不少时间，有一些没必要的挫折。你同样做一遍，可能不值得。或者你clone一份我的代码也可以解决这个问题
 
-其实在项目文档中已经提到过中文字体的问题，Google Sans Code没有适配中文字符，渲染成OG图片后所有的中文都会变成口口。但是开发者认为的解决方式是直接不用Google Sans Code字体了，用本地所有机器上都会使用的、大家都知道的前端那一套适配字体，但我就是想要GS好看的效果，~~怎么了我们拆那人就不能用好看的英文字体吗~~
+其实在项目文档中已经提到过中文字体的问题，Google Sans Code没有适配中文字符，渲染成OG图片后所有的中文都会变成口口。但是开发者认为的解决方式是**直接不用Google Sans Code字体了**，用本地所有机器上都会使用的、大家都知道的前端那一套适配字体，但我就是想要GS好看的效果，~~怎么了我们拆那人就不能用好看的英文字体吗~~
 
 最终的解决方案是OG图片换用Noto Sans SC生成，Cloudflare上有这个字体，所以没有影响
 
@@ -347,6 +347,8 @@ export function parseFontUrls(css: string): { weight: number; url: string }[] {
 于是让Pi Coding Agent写了一个插件，自动在中英文之间添加一个瘦空格，视觉效果上比等宽空格要好很多，而且不用手动添加空格了
 
 > 缺点是如果你不小心手动添加了空格，那还是这么宽，只能自己多多注意。
+> 
+> 以及如果不使用等宽英文字体，以上问题和插件，统统不需要。现在我换用了Rubik字体，上述烦恼其实已经没有了
 
 这一套是在编译的时候运行的，不会对运行速度产生影响，反正我用的是Cloudflare Pages没有编译时间限制，随便它编
 
@@ -359,7 +361,7 @@ Paper文档说现在支持了Obsidian的callout格式，我真信了，弄了半
 
 经过大力气后发现，不是真的没生效，而是在「暗黑模式」不生效
 
-rehype-callouts使用  `.dark` 类切换暗色模式，但Paper使用 `data-theme="dark"` 属性。`.dark .callout` 选择器永远匹配不到，导致 `mix-blend-mode: darken` 在暗色模式下仍然生效，将浅色文字混合为深色后融入背景。
+rehype-callouts使用  `.dark` 类切换暗色模式，但Paper使用 `data-theme="dark"` 属性切换暗色模式。所以`.dark .callout` 选择器永远匹配不到，callout文字样式一直处于浅色模式状态， `mix-blend-mode: darken` 在暗色模式下将浅色文字混合为深色后融入了背景，从外面看就是一旦切成暗黑模式，callout内部的文字一坨黑。
     
 修复方法：在 `global.css` 的 @layer 外部设置 `.callout { mix-blend-mode: normal }` 。必须放在 @layer 外，因为 Obsidian 主题 CSS 不在任何 cascade layer 内，无 layer 样式优先级高于 @layer 内样式。
 
@@ -369,7 +371,7 @@ rehype-callouts使用  `.dark` 类切换暗色模式，但Paper使用 `data-them
 }
 ```
     
-同时修正 details:not(.callout) 选择器，避免可折叠 callout 内文字被隐藏。
+同时修正 `details:not(.callout)` 选择器，避免可折叠 callout 内文字被隐藏。
 
 > [!NOTE]
 > 
