@@ -75,6 +75,7 @@ const {
   timezone,
   tags,
   hideEditPost,
+  comments,
 } = post.data;
 
 const { Content } = await render(post);
@@ -192,7 +193,7 @@ const ogImage = ogImageUrl
       <LikeButton pagePath={getPostUrl(post.id, post.filePath, locale).replace(/^\/|\/+$/g, "")} />
     </div>
 
-    <Comments />
+    {comments && <Comments />}
 
     <hr class="my-8 border-dashed" />
 
