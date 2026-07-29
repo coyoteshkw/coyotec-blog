@@ -1,0 +1,285 @@
+---
+pubDatetime: 2026-07-29T23:13:20.000+08:00
+title: 网页版Obsidian——ignis部署与排坑
+featured: true
+draft: false
+tags:
+  - obsidian
+  - docker
+  - cloudflare
+description: 小内存笔电用户就这样歹毒地节省内存。网页版OB除了mdx插件有点难装...还是不错的
+---
+
+import Collapse from '@/components/Collapse.astro'
+
+## Table of contents
+
+## 省流版
+<Collapse title="适合急急急人士">
+
+如果你完全明白你要做什么并且急着使用，这是省流版：
+
+1. Docker部署：
+
+```yml
+# docker-compose.yml
+services:
+  ignis:
+    image: nobbe/ignis:latest
+    ports:
+      - "8080:8080"
+    environment:
+      # match these to your host user (run: id)
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./vaults:/vaults
+      - ./data:/app/data
+      - obsidian-app:/app/obsidian-app
+    restart: unless-stopped
+
+volumes:
+  obsidian-app:
+```
+
+如果你的网络不太好，需要解决网络问题，我在ssh配置中将服务器的8888端口代理到了本地7890端口：
+
+```yml
+services:
+  ignis:
+    image: nobbe/ignis:latest
+    container_name: ignis
+    environment:
+      # match these to your host user (run: id)
+      - PUID=1000
+      - PGID=1000
+      - PORT=33989
+      # proxy
+      - PROXY_HOST=localhost
+      - PROXY_HOST=8888
+    entrypoint:
+      - /entrypoint-override.sh
+    volumes:
+      - ./vaults:/vaults
+      - ./data:/app/data
+      - obsidian-app:/app/obsidian-app
+      - ./entrypoint-override.sh/:/entrypoint-override.sh:ro
+    restart: unless-stopped
+
+volumes:
+  obsidian-app:
+```
+
+运行检查obsidian是否下载完成
+
+```
+docker compose up -d
+docker compose logs -f
+```
+
+确认完成后防火墙放开对应端口，访问公网IP地址，确定可以访问。红字是正常的，需要解决HTTPS问题
+
+2. 通过Cloudflare Tunnel转发本地端口，实现HTTPS协议访问。确定有效，且方便快捷
+3. 利用Cloudflare Access零信任(叫Zero Trust)服务限制访问，策略选择邮箱固定值为自己的登录邮箱
+
+</Collapse>
+
+
+## 什么是ignis，我用它的原因
+ignis是一个允许你在浏览器远程访问Obsidian笔记软件的工具，**自部署**在服务器上，**不是通过浏览器可以访问你的本地Obsidian，这是两套东西(但你可以通过同步插件来同步桌面与浏览器的文件)**
+
+在此之前我一直使用files.md搭配本地markedit，这一套其实已经很舒服了，一个很小的问题是files.md没有行号，如果我在里面写东西就很难对齐排版。如果能切换到Obsidian可能会好很多，遂尝试
+
+**为什么不是Obsidian桌面端？**
+
+1. 为了省内存，8G Mac的自我修养是这样的
+2. 可以真正实现在手机上编写md并且在电脑端实时同步
+3. 我不是OB重度用户，第二大脑功能近乎用不上，没有强依赖性
+
+## 需求
+- 一台可以自己支配的服务器，装载Docker，没装的可以用[Linux Mirror])装一下
+- 有Cloudflare账户，并开通零信任功能(需要绑定银行卡或Paypal，我绑了Paypal)
+- 一个托管在Cloudflare上的域名
+- 通畅的网络环境
+
+## 安装
+进入服务器，创建一个空目录，添加`docker-compose.yml`文件
+
+```bash
+mkdir ignis && cd ignis
+vim docker-compose.yml
+```
+
+```yml
+# docker-compose.yml
+services:
+  ignis:
+    image: nobbe/ignis:latest
+    ports:
+      - "8080:8080"
+    environment:
+      # match these to your host user (run: id)
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./vaults:/vaults
+      - ./data:/app/data
+      - obsidian-app:/app/obsidian-app
+    restart: unless-stopped
+
+volumes:
+  obsidian-app:
+```
+
+如果你的网络环境无敌通畅(例如服务器在大陆境外)，那么直接运行创建指令
+
+```
+docker compose up -d
+```
+
+首次启动会下载 Obsidian 和 obsidian-headless CLI，如果服务器在境内，那么大概率下载不下来。可以通过查看日志指令检查。如果日志里一直卡在下载，那就是了
+
+```
+docker compose logs --follow
+```
+
+我的解决方法是在ssh配置中将远程的8888端口代理到本地的7890端口(clash)，修改docker文件让下载代理到8888端口
+
+首先编辑本机的ssh config文件，Mac下地址为`~/.ssh/config`
+
+```
+Host your_server
+	HostName your_server_ip
+	User your_user
+	IdentityFile ~/.ssh/your_key
+	# 每 60 秒向服务器发送一个“心跳”包
+    ServerAliveInterval 60
+    # 如果服务器连续 3 次没回应，才真正断开
+    ServerAliveCountMax 3
+	# 将远程的8888端口代理到本地的7890端口(clash)
+	RemoteForward 8888 localhost:7890
+	Port 22
+```
+
+回到服务器，清理下载失败的docker
+
+```
+docker compose down
+```
+
+为docker文件添加端口代理
+
+```yml
+services:
+  ignis:
+    image: nobbe/ignis:latest
+    container_name: ignis
+    environment:
+      # match these to your host user (run: id)
+      - PUID=1000
+      - PGID=1000
+      - PORT=33989
+      # proxy
+      - PROXY_HOST=localhost
+      - PROXY_HOST=8888
+    entrypoint:
+      - /entrypoint-override.sh
+    volumes:
+      - ./vaults:/vaults
+      - ./data:/app/data
+      - obsidian-app:/app/obsidian-app
+      - ./entrypoint-override.sh/:/entrypoint-override.sh:ro
+    restart: unless-stopped
+
+volumes:
+  obsidian-app:
+```
+
+重新启动并检查日志，确定下载正常
+
+```
+docker compose up -d
+docker compose logs --follow
+```
+
+开放服务器防火墙对应端口进行测试，这里以33989为例，访问公网地址+端口号，能够进入Obsidian创建新文件夹界面就正常了。
+
+网页会**爆红字提醒ignis需要HTTPS访问，否则会缺失很多功能**，不管关掉网页继续下一步
+
+## 利用Cloudflare Tunnel获取HTTPS
+
+Cloudflare Tunnel可以让用户访问到网站，但不需要暴露服务器真实公网IP，对于ignis更重要的是，托管在CF的域名都会自动发放和续签SSL证书，我们就不用再去折腾HTTPS了
+
+> [!INFO]- 一点吐槽
+> 之前一直想跟着大佬的文章尝试用nginx + acme.sh的形式获取证书，但陆续遇到了kitty发疯无法使用删除键，acme.sh持续不发放证书明明响应值200但无返回内容的情况，到最后两个证书途径都说我访问频繁拒绝访问了，没招才换的CF Tunnel
+
+![image.png](https://img.055933.xyz/file/1785334675793_image.png)
+
+侧边栏选择Tunnel选项，创建新隧道，名字随便填只是给自己标识的，不重要
+
+名称之后会要求设置cloudflared守护进程，依据自己服务器的操作系统来，我的服务器是Red Hat系的
+
+![image.png](https://img.055933.xyz/file/1785335352520_image.png)
+
+下载配置成功后「连接状态」会显示绿色。
+
+> 这里有个乌龙，一开始着急用结果把cloudflared下载到自己本机上了，虽然本机也能想办法用但是原本不需要啊，只能紧急把本机的卸载了
+
+创建完成后进入路由页面，添加新路由，选「添加已发布应用程序」，填写一个自己喜欢的前缀，比如ob
+
+**服务URL**填Docker自己开放的端口的本机地址即可
+
+> [!NOTE]
+> 如果这里成功配置了，后续记得把防火墙开放的端口禁用掉，不再需要了，避免恶意用户通过IP的方式直接访问到网站
+
+![image.png](https://img.055933.xyz/file/1785335598943_image.png)
+
+![image.png](https://img.055933.xyz/file/1785335622748_image.png)
+
+![image.png](https://img.055933.xyz/file/1785335842160_image.png)
+
+添加完成后稍等几分钟，通过新域名就可以访问到ignis啦
+
+> [!WARNING]
+> 部分浏览器访问时不会优先用https访问，导致访问时仍然显示红字，自行在网址栏增补s即可
+
+## Cloudflare Zero Trust增强防护
+现在虽然可以用，但是ignis没有密码功能，如果网址被曝光了笔记直接互联网裸奔
+
+CF零信任功能相当于给域名加锁，访问之前要先过一道验证，验证完成后才建立连接
+
+两种方式访问零信任，一个是在Tunnels页面右键省略号，会弹出一个「在Zero Trust内管理」，一个是直接在侧边栏找到「Zero Trust」
+
+![image.png](https://img.055933.xyz/file/1785336503514_image.png)
+
+第一次使用会问你要不要开通，开通即可
+
+侧边栏选择「访问控制」「应用程序」，右上角「创建应用程序」
+
+![image.png](https://img.055933.xyz/file/1785336687087_image.png)
+
+点开这一排验证看晕了，总之我打算用登录的法子，就选「服务身份验证」好了
+
+![image.png](https://img.055933.xyz/file/1785336786604_image.png)
+
+公共主机名写刚才Tunnels创建的，允许浏览器访问
+
+![image.png](https://img.055933.xyz/file/1785336911412_image.png)
+
+身份验证选Cloudflare，因为我只有一个更新选项所以勾选了跳过登录方式选择
+
+![image.png](https://img.055933.xyz/file/1785337003323_image.png)
+
+看起来可以了？并非并非，如果这个时候保存登录，会显示无效。虽然我是你ignis的老大但我不能进喵
+
+必须为访问创建一条策略(Access)，策略多种多样，我的选择只有登录邮箱符合我的邮箱才让进。如果你希望你的某些朋友也可以访问，可以做适当修改
+
+![image.png](https://img.055933.xyz/file/1785337256967_image.png)
+
+![image.png](https://img.055933.xyz/file/1785337453510_image.png)
+
+保存策略再保存整体Zero Trust配置，稍等一会再登录，应该会弹出验证界面，此时登录CF账号应该可以正常登录。正常情况下大概24小时后才会重新验证，对于普通的博客人是够用了
+
+一切正常后记得关闭防火墙刚才测试时开放的端口，再提醒一遍
+
+![猫猫敲键盘.gif](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2J4dDJkbGl0NGZybjR2a2ppN2FlODFpdnk5ZDh3N25ncmV0c3N6biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eJG93okDlbbMSWreuz/giphy.gif)
