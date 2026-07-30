@@ -97,7 +97,7 @@ ignis是一个允许你在浏览器远程访问Obsidian笔记软件的工具，*
 3. 我不是OB重度用户，第二大脑功能近乎用不上，没有强依赖性
 
 ## 需求
-- 一台可以自己支配的服务器，装载Docker，没装的可以用[Linux Mirror])装一下
+- 一台可以自己支配的服务器，装载Docker，没装的可以用[Linux Mirror](https://linuxmirrors.cn/)装一下
 - 有Cloudflare账户，并开通零信任功能(需要绑定银行卡或Paypal，我绑了Paypal)
 - 一个托管在Cloudflare上的域名
 - 通畅的网络环境
@@ -211,7 +211,11 @@ docker compose logs --follow
 Cloudflare Tunnel可以让用户访问到网站，但不需要暴露服务器真实公网IP，对于ignis更重要的是，托管在CF的域名都会自动发放和续签SSL证书，我们就不用再去折腾HTTPS了
 
 > [!INFO]- 一点吐槽
-> 之前一直想跟着大佬的文章尝试用nginx + acme.sh的形式获取证书，但陆续遇到了kitty发疯无法使用删除键，acme.sh持续不发放证书明明响应值200但无返回内容的情况，到最后两个证书途径都说我访问频繁拒绝访问了，没招才换的CF Tunnel
+> 之前一直想跟着大佬的文章尝试用nginx + acme.sh的形式获取证书
+> 
+> 但陆续遇到了kitty发疯无法使用删除键，acme.sh持续不发放证书明明响应值200但无返回内容的情况
+> 
+> 到最后两个证书途径都说我访问频繁拒绝访问了，没招才换的CF Tunnel
 
 ![image.png](https://img.055933.xyz/file/1785334675793_image.png)
 
