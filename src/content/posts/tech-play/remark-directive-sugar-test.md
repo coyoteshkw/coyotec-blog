@@ -150,7 +150,6 @@ Example 2: :badge[Success]{style="color: black; background-color: #aaf233"}
 
 ```
 :::github{repo="withastro/astro"}
-:::
 ```
 
 :::github{repo="withastro/astro"}
