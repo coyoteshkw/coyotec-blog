@@ -30,8 +30,6 @@ curl -LJO https://github.com/hffqyd/tw5-server/releases/download/1.5.2/tw5server
 
 通过这个命令启动tw5-server，这里贴一个官方的用法说明
 
-> TODO 这里应该有一个折叠框，可以参考我之前的coyotec tiddlyhost插件
-
 ```
 Usage:
 tw5server -a:localhost -p:8000 -d:dir -b:backup
