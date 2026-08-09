@@ -1,6 +1,6 @@
 ---
 pubDatetime: 2026-08-09T17:30:00.000+08:00
-title: tiddlywiki单文件版服务器部署(tw5-server)
+title: TiddlyWiki单文件版服务器部署教程(tw5-server)
 featured: true
 draft: false
 tags:
