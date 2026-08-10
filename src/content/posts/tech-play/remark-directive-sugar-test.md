@@ -152,4 +152,41 @@ Example 2: :badge[Success]{style="color: black; background-color: #aaf233"}
 :::github{repo="withastro/astro"}
 ```
 
-:::github{repo="withastro/astro"}
+代码高亮
+
+`// [!code highlight]`
+
+```javascript
+function hello() {
+  console.log('这行是普通的');
+  console.log('这行会高亮显示'); // [!code highlight]
+}
+```
+
+代码变更
+
+`// [!code --]`
+`// [!code ++]`
+
+```javascript
+function calculate(a, b) {
+  return a + b; // [!code --]
+  return a * b; // [!code ++]
+}
+```
+
+无高亮语言的代码高亮
+
+必须放在顶部，不能同行，注释语法不限制
+
+```
+function process() {
+  console.log('这行会变灰');
+  // [!code highlight]
+  console.log('这行正常显示');
+  <!-- [!code ++] -->
+  console.log('这行也变灰');
+}
+```
+
+

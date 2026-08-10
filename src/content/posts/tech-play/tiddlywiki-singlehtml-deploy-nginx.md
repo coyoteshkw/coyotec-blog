@@ -57,15 +57,15 @@ tw5server -a:localhost -p:48321 -d:dir -b:backup
 
 ![image.png](https://img.055933.xyz/file/1786203525199_image.png)
 
-但第一次进入里面应该什么也没有，因为tw5-server默认不带tiddlywiki。打开tiddlywiki的官方，这里以民间汉化的官网[tiddlywiki舞](https://bramchen.github.io/tw5-docs/zh-Hans/)为例，点击快速入门的[DIY](https://bramchen.github.io/tw5-docs/zh-Hans/#GettingStarted)选项卡
+但第一次进入里面应该什么也没有，因为tw5-server默认不带tiddlywiki。打开tiddlywiki的官网，这里以民间汉化的官网[tiddlywiki舞](https://bramchen.github.io/tw5-docs/zh-Hans/)为例，点击快速入门的[DIY](https://bramchen.github.io/tw5-docs/zh-Hans/#GettingStarted)选项卡
 
 ![image.png](https://img.055933.xyz/file/1786203710726_image.png)
 
-下载简体中文版即可。注意tiddlywiki舞这个汉化版本一直使用prerealease版本，如果想要下载官网的版本那就走[官网](https://tiddlywiki.com/)就行，只是要在设置 - 插件里多下一个中文插件包，我这里就省去这一步了
+下载简体中文版即可。注意tiddlywiki舞这个汉化版本一直使用prerealease版本，如果想要下载官网的稳定版本那就从[官网](https://tiddlywiki.com/)下载，只是要在设置 - 插件里多下一个中文插件包，我这里就省去这一步了
 
 ![image.png](https://img.055933.xyz/file/1786203877737_image.png)
 
-下载到本地回到tw5-server提供的界面，右上角有个upload按钮，但**不知道为什么在Mac Chrome浏览器上点了没用**，但是从文件管理器往网页里拖是有用的，所以拖进来就上传了。直接从后台上传到`dir/`文件夹估计也是有用的
+下载到本地回到tw5-server提供的界面，右上角有个upload按钮，但**不知道为什么在Mac Chrome浏览器上点了没用**，但是从文件管理器往网页里拖是有用的，所以拖进来上传了。直接从后台上传到`dir/`文件夹估计也能成
 
 点击上传到html文件就会跳转到tiddlywiki单文件版了
 
