@@ -5,6 +5,7 @@ featured: true
 draft: false
 tags:
   - tiddlywiki
+  - 笔记应用
   - 部署
   - nginx
 description: 如何部署一个tiddlywiki单文件版到服务器上呢，小编也很好奇，那就和小编一起来看看吧
@@ -84,8 +85,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=coyotec
-Group=coyotec
+User=username
+Group=username
 WorkingDirectory=/your-folder/tw5-server
 ExecStart=/your-folder/tw5-server/tw5server-amd64-linux -a:localhost -p:48321 -d:dir -b:backup
 Restart=on-failure
@@ -334,4 +335,3 @@ sudo systemctl reload nginx
 访问tw，应弹出nginx的登陆框，输入自己设置的用户名和密码即可登录，我用了两天还没有遇到过二次验证，所以不会经常打扰
 
 至此，一个本质nginx配置的tiddlywiki单文件版服务器部署教程就此完成
-
