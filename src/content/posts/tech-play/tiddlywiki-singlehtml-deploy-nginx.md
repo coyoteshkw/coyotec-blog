@@ -19,7 +19,7 @@ nodejs版本的tw更加强大和灵活，但是我只想从最简单的单文件
 
 * 尝鲜友好
 * 自带备份功能，抢救方便
-* tiddlywiki自己是不像之前的ignis/sivlerbullet一样强制HTTPS访问到，如果不是想要通过域名来避免公网快速裸奔，其实部署也就几行的事情
+* tiddlywiki不像之前的ignis/sivlerbullet一样强制HTTPS访问，如果不想通过域名避免公网快速裸奔，其实部署也就几行的事情
 
 ## 快速启动
 
@@ -49,12 +49,13 @@ Backups auto-clean strategy:
 Keep all backups in current month, keep only the newest one for previous months.
 ```
 
+官方给的8000端口太常见，这里改为48321
+
 ```bash
-# 官方给的8000端口太常见，这里改为48321
 tw5server -a:localhost -p:48321 -d:dir -b:backup
 ```
 
-服务器防火墙开放48321端口，应该可以看到这样的界面
+服务器防火墙开放48321端口，通过公网IP:端口号访问，应该可以看到这样的界面
 
 ![image.png](https://img.055933.xyz/file/1786203525199_image.png)
 
@@ -122,7 +123,7 @@ sudo journalctl -u tw5server -f
 
 ### why not CF Tunnels?
 
-本来最简单的，也是我对[ignis](https://coyoteshkw.com/posts/tech-play/obsidian-ignis-deploy-docker/)使用的方法是直接Cloudflare Tunnels，但是Tunnels限制了一次保存的大小，而tiddlywiki单文件一次保存轻轻松松超过1mb，所以被拒绝保存，加上因为tw安装和测试插件都要频繁地保存重载，走CF小黄云明显拖慢速度，对比ignis的tunnel体验很糟糕，所以只能采用经典的nginx+证书签发模式
+本来最简单的，也是我对[ignis](https://coyoteshkw.com/posts/tech-play/obsidian-ignis-deploy-docker/)使用的方法是直接Cloudflare Tunnels，但是CF Tunnels限制了一次保存的大小，而tiddlywiki单文件一次保存轻轻松松超过2mb，所以被拒绝保存，加上因为tw安装和测试插件都要频繁地保存重载，走CF小黄云明显拖慢速度，对比ignis的tunnel体验很糟糕，所以采用经典的nginx+证书签发模式
 
 > 单文件格式在服务器上寸步难行的又一力证
 
@@ -173,7 +174,7 @@ server {
 	hello
 ```
 
-光改高位端口还没用，因为HTTP是明文传输，备案的又不是啥子，给你拦截了，所以要用HTTPS，HTTPS加密运输，备案再看到是高位端口就不管了
+光改高位端口还没用，因为HTTP是明文传输，备案的又不是啥子，给你拦截了，所以要用HTTPS，HTTPS加密运输
 
 ## 证书签发
 
