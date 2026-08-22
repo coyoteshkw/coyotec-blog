@@ -1,0 +1,36 @@
+---
+/**
+ * 阅读时长组件
+ *
+ * 展示由 remarkReadingTime 插件计算出的阅读时长。
+ * 样式与 Datetime 组件保持一致（muted 色 + 时钟图标）。
+ *
+ * @example
+ * <ReadTime time="约 5 分钟" size="lg" />
+ */
+import IconClock from "@/assets/icons/IconClock.svg";
+
+type Props = {
+  time: string;
+  size?: "sm" | "lg";
+  class?: string;
+};
+
+const { time, size = "sm", class: className = "" } = Astro.props;
+---
+
+<div
+  class:list={["text-muted-foreground flex items-center gap-x-2", className]}
+>
+  <IconClock
+    class:list={[
+      "inline-block size-5.5 min-w-5.5",
+      { "scale-90": size === "sm" },
+    ]}
+  />
+  <time
+    class:list={["text-sm font-mono", { "sm:text-base": size === "lg" }]}
+  >
+    {time}
+  </time>
+</div>

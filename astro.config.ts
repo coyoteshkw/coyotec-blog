@@ -17,6 +17,7 @@ import {
 } from "@shikijs/transformers";
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import { remarkCjkSpacing } from "./src/utils/remarkCjkSpacing";
+import { remarkReadingTime } from "./src/utils/remarkReadingTime";
 import rehypeCallouts from "rehype-callouts";
 import remarkDirective from "remark-directive";
 import remarkDirectiveSugar from "remark-directive-sugar";
@@ -49,6 +50,7 @@ export default defineConfig({
         [remarkDirectiveSugar, { link: { faviconSourceUrl: "https://faviconsnap.com/api/favicon?url={domain}" } }],
         remarkToc,
         remarkCjkSpacing,
+        remarkReadingTime,
         [remarkCollapse, { test: "Table of contents" }],
       ],
       rehypePlugins: [
