@@ -33,7 +33,7 @@ const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(
   postTimezone ?? config.site.timezone
 );
 
-const date = datetime.format("YYYY-MM-DD");
+const date = datetime.format("YYYY-MM-DD | hh:mm A");
 ---
 
 <div
@@ -45,17 +45,17 @@ const date = datetime.format("YYYY-MM-DD");
       { "scale-90": size === "sm" },
     ]}
   />
-  {
-    isModified && (
-      <span class:list={["text-sm", { "sm:text-base": size === "lg" }]}>
-        {t.post.updatedAt}:
-      </span>
-    )
-  }
   <time
-    class:list={["text-sm", { "sm:text-base": size === "lg" }]}
+    class:list={["text-sm font-mono", { "sm:text-base": size === "lg" }]}
     datetime={datetime.toISOString()}
   >
     {date}
   </time>
+  {
+    isModified && (
+      <span class:list={["text-sm", { "sm:text-base": size === "lg" }]}>
+        {t.post.updatedAt}
+      </span>
+    )
+  }
 </div>

@@ -11,7 +11,7 @@ export default {
   },
   post: {
     publishedAt: "Published at",
-    updatedAt: "更新",
+    updatedAt: "修订",
     sharePostIntro: "Share this post:",
     sharePostOn: "Share this post on {{platform}}",
     sharePostViaEmail: "Share this post via email",
