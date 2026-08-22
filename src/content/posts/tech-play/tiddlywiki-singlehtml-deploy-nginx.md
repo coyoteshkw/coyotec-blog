@@ -1,5 +1,6 @@
 ---
 pubDatetime: 2026-08-09T17:30:00.000+08:00
+modDatetime: 2026-08-22T09:43:32Z
 title: TiddlyWiki单文件版服务器部署教程(tw5-server)
 featured: true
 draft: false
@@ -18,18 +19,27 @@ description: 如何部署一个tiddlywiki单文件版到服务器上呢，小编
 nodejs版本的tw更加强大和灵活，但是我只想从最简单的单文件做起，之后确定会一直使用再转向nodejs版本，所以找了一个可以部署单文件的[tw5-server](https://github.com/hffqyd/tw5-server)
 
 * 尝鲜友好
-* 自带备份功能，抢救方便
+* tw5-server自带备份功能，抢救方便
+* 单文件的强大总是出乎意料的(指我部署了nodejs版本之后发现加载速度还没一个6mb的HTML快)
 * tiddlywiki不像之前的ignis/sivlerbullet一样强制HTTPS访问，如果不想通过域名避免公网快速裸奔，其实部署也就几行的事情
 
 ## 快速启动
 
-将最新的realease上传到服务器，这里使用curl
+将tw5-server最新的realease上传到服务器，这里使用curl直接在服务器上操作，也可以通过scp命令或xshell等工具上传
 
 ```bash
+mkdir tiddlywiki && cd tiddlywiki
 curl -LJO https://github.com/hffqyd/tw5-server/releases/download/1.5.2/tw5server-amd64-linux
 ```
 
-通过这个命令启动tw5-server，这里贴一个官方的用法说明
+通过这个命令启动tw5-server
+
+```bash
+# -d表示HTML存放的位置，-b表示备份存放的文件夹
+tw5server -a:localhost -p:8000 -d:dir -b:backup
+```
+
+这里贴一个官方的用法说明
 
 ```
 Usage:
@@ -77,9 +87,10 @@ tw5server -a:localhost -p:48321 -d:dir -b:backup
 
 ## 设为systemd服务
 
-创建一个 `tw5server.service` 文件，并 `sudo cp` 到系统service目录
+为了tiddlywiki在离开服务器时也能正常访问，我们需要把tw5-server设为系统服务。在tiddlywiki文件夹下创建一个 `tw5server.service` 文件，并 `sudo cp` 到系统service目录
 
 ```
+# tw5server.service
 [Unit]
 Description=TW5 Server
 After=network.target
@@ -98,7 +109,7 @@ WantedBy=multi-user.target
 ```
 
 ```bash
-# 1. 复制到系统 service 目录
+# 1. 复制到系统 service 目录，根据发行版不同，路径也可能不同
 sudo cp /your-folder/tw5server.service /etc/systemd/system/
 
 # 2. 重新加载配置
@@ -123,7 +134,7 @@ sudo journalctl -u tw5server -f
 
 ### why not CF Tunnels?
 
-本来最简单的，也是我对[ignis](https://coyoteshkw.com/posts/tech-play/obsidian-ignis-deploy-docker/)使用的方法是直接Cloudflare Tunnels，但是CF Tunnels限制了一次保存的大小，而tiddlywiki单文件一次保存轻轻松松超过2mb，所以被拒绝保存，加上因为tw安装和测试插件都要频繁地保存重载，走CF小黄云明显拖慢速度，对比ignis的tunnel体验很糟糕，所以采用经典的nginx+证书签发模式
+本来最简单的，也是我对[ignis](https://coyoteshkw.com/posts/tech-play/obsidian-ignis-deploy-docker/)使用的方法是直接Cloudflare Tunnels，但是**CF Tunnels限制了一次保存的大小**，而tiddlywiki单文件一次保存轻轻松松超过2mb，所以被拒绝保存，加上因为tw安装和测试插件都要频繁地保存重载，走CF小黄云明显拖慢速度，对比ignis的tunnel体验很糟糕，所以采用经典的nginx+证书签发模式
 
 > 单文件格式在服务器上寸步难行的又一力证
 
@@ -156,6 +167,7 @@ server {
 重载nginx
 
 ```bash
+# 语法检查
 sudo -S nginx -t
 sudo systemctl reload nginx
 ```
@@ -174,13 +186,13 @@ server {
 	hello
 ```
 
-光改高位端口还没用，因为HTTP是明文传输，备案的又不是啥子，给你拦截了，所以要用HTTPS，HTTPS加密运输
+光改高位端口还没用，因为HTTP是明文传输，备案的又不是啥子，给你拦截了，所以要用HTTPS加密运输
 
-## 证书签发
+## HTTPS证书签发
 
 证书签发我用的是[acme.sh](https://github.com/acmesh-official/acme.sh)，可以自动续签，比较方便。
 
-验证方式用域名所有权，我的域名托管的Cloudflare，这里用就CF的域名
+验证方式用域名所有权，我的域名托管的Cloudflare，这里就用CF来演示
 
 ```bash
 curl https://get.acme.sh | sh -s email=your@gmail.com 2>&1
@@ -189,7 +201,11 @@ curl https://get.acme.sh | sh -s email=your@gmail.com 2>&1
 > [!WARNING]
 > 服务器在国内的自行处理下载的网络问题
 
-确认安装完成后，打开Cloudflare，点击右上角头像 - API令牌，可以创建一个自定义令牌或使用Global API Key
+确认下载安装完成后，打开Cloudflare，点击右上角头像 - API令牌，可以创建一个自定义令牌或使用Global API Key
+
+![ImageStitch_Toolshu.com_q80_1787388366741.jpg](https://img.055933.xyz/file/1787388407167_ImageStitch_Toolshu.com_q80_1787388366741.jpg)
+
+调用acme.sh签发证书
 
 ```bash
 export CF_Key="your_key"
@@ -197,7 +213,7 @@ export CF_Email="your-email@gmail.com"
 ~/.acme.sh/acme.sh --issue --dns dns_cf -d 你的域名 --keylength ec-256
 ```
 
-创建过程比较慢，也可能会重试好几次。成功后会把证书和key保存在 `/home/coyotec/.acme.sh/你的域名_ecc/你的域名.cer` 下，所有信息都在 `/home/coyotec/.acme.sh/你的域名_ecc/` 文件夹下
+签发过程比较慢，也可能会重试好几次。成功后会把证书和key保存在 `/home/coyotec/.acme.sh/你的域名_ecc/你的域名.cer` 下，所有信息都在 `/home/coyotec/.acme.sh/你的域名_ecc/` 文件夹下
 
 ```bash
 #结构
@@ -208,10 +224,10 @@ your-folder/tw5-server/
 └── tw5-nginx.conf  # nginx 配置
 ```
 
-将证书安装到tw5-server放置的文件夹下
+将证书安装到tw5-server放置的文件夹下，这几个步骤可以让AI来完成
 
 ```bash
-sudo -S mkdir -p /etc/nginx/ssl && ~/.acme.sh/acme.sh --install-cert -d wiki.coyoteshkw.com \
+sudo -S mkdir -p /etc/nginx/ssl && ~/.acme.sh/acme.sh --install-cert -d yourdomain.com \
   --ecc \
   --cert-file       ./cert.pem \
   --key-file        ./key.pem \
@@ -257,9 +273,21 @@ sudo systemctl reload nginx
 
 ![jerry.gif](https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3bDdscmhvbjIyZzNpMTByenIyeHQ0MXE5NnNsOTQ1emw0cGo0MzhwYyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/30pykuIQHxzQsfefte/giphy.gif)
 
-### 解决保存问题
+如果在签发时遇到一些问题，首先考虑你提供的信息是否足够确认所有权，acme.sh即使你忘记提供了某些信息，它也会返回200成功，我最开始就是完全没提供任何所有权信息就让它给我签发，结果它也不说有什么问题，我也没明白明明200了却什么也没有，二人僵持不下。其次可以考虑切换签发机构
 
-虽然能访问，但是会发现无法保存，原因是nginx限制了默认的上传大小为1M，对于tw这么大的单文件显然不够，改为50M，除非图片不存图床不存服务器全往单文件里存，不然用不完
+```bash
+# 设置默认 CA（例如 Let's Encrypt）
+acme.sh --set-default-ca --server letsencrypt
+
+# 其他常见 CA：
+acme.sh --set-default-ca --server zerossl   # ZeroSSL（默认）
+acme.sh --set-default-ca --server buypass    # Buypass
+acme.sh --set-default-ca --server google     # Google Trust 
+```
+
+### 解决tw保存问题
+
+虽然能访问，但是会发现通过域名访问的tiddlywiki无法保存，原因是nginx限制了默认的上传大小为1M，对于tw这么大的单文件显然不够，改为50M，除非图片不存图床不存服务器全往单文件里存，不然用不完
 
 ```
 # tw5-nginx.conf
