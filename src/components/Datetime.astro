@@ -35,6 +35,9 @@ const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(
 
 const date = datetime.format("YYYY-MM-DD");
 const time = datetime.format("hh:mm A");
+// 若 frontmatter 未提供具体时间（时分秒均为 0），则只显示日期
+const hasTime =
+  datetime.hour() !== 0 || datetime.minute() !== 0 || datetime.second() !== 0;
 ---
 
 <div
@@ -51,12 +54,18 @@ const time = datetime.format("hh:mm A");
     datetime={datetime.toISOString()}
   >
     <span>{date}</span>
-    <span
-      aria-hidden="true"
-      class="inline-block w-[2px] self-center bg-muted-foreground/20"
-      style="height:1em"
-    ></span>
-    <span>{time}</span>
+    {
+      hasTime && (
+        <>
+          <span
+            aria-hidden="true"
+            class="inline-block w-[2px] self-center bg-muted-foreground/20"
+            style="height:1em"
+          ></span>
+          <span>{time}</span>
+        </>
+      )
+    }
   </time>
   {
     isModified && (
