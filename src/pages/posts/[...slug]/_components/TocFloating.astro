@@ -22,7 +22,7 @@
   <!-- ===== 窄屏 FAB 按钮（sm~xl 之间靠顶部，sm 以下仍底部） ===== -->
   <button
     id="toc-fab"
-    class="xl:hidden fixed end-0 z-40 flex h-12 w-14 items-center justify-center rounded-l-full bg-background pl-4 pr-2.5 text-muted-foreground border border-r-0 border-muted-foreground/40 shadow-lg transition-opacity hover:opacity-90 bottom-[7rem] sm:top-[10rem] sm:bottom-auto"
+    class="xl:hidden fixed end-0 z-40 flex h-12 w-14 items-center justify-center rounded-l-full bg-background pl-4 pr-2.5 text-muted-foreground border border-r-0 border-muted-foreground/40 shadow-lg transition-all duration-300 ease-out hover:opacity-90 bottom-[7rem] sm:top-[10rem] sm:bottom-auto"
     aria-label="打开目录"
   >
     <svg
@@ -125,6 +125,12 @@
     #toc-drawer.closing-mobile {
       animation: slide-out-right 0.15s ease-in forwards;
     }
+  }
+
+  /* 目录按钮：手机端向下滚动时隐藏（滑出屏幕右缘） */
+  #toc-fab.toc-fab-hidden {
+    transform: translateX(calc(100% + 1rem));
+    opacity: 0;
   }
 
   /* ---- TOC 容器 ---- */
@@ -298,6 +304,47 @@
     overlay?.addEventListener("click", (e) => {
       if (e.target === overlay) closeToc();
     });
+
+    // ===== 手机端滚动时按钮显隐 =====
+    let lastScrollY = window.scrollY || window.pageYOffset || 0;
+    let fabHidden = false;
+    let ticking = false;
+
+    function handleScrollShowHide() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+
+        // 仅在手机宽度（<640px）下生效
+        if (window.innerWidth >= 640) {
+          if (fabHidden) {
+            fab?.classList.remove("toc-fab-hidden");
+            fabHidden = false;
+          }
+          return;
+        }
+
+        const currentScrollY = window.scrollY || window.pageYOffset || 0;
+        const delta = currentScrollY - lastScrollY;
+
+        // 向下滚动超过阈值且未隐藏时，隐藏按钮
+        if (delta > 10 && !fabHidden) {
+          fab?.classList.add("toc-fab-hidden");
+          fabHidden = true;
+        }
+        // 向上滚动超过阈值且已隐藏时，显示按钮
+        else if (delta < -10 && fabHidden) {
+          fab?.classList.remove("toc-fab-hidden");
+          fabHidden = false;
+        }
+
+        lastScrollY = currentScrollY;
+      });
+    }
+
+    window.addEventListener("scroll", handleScrollShowHide, { passive: true });
+    document.addEventListener("scroll", handleScrollShowHide, { passive: true, capture: true });
 
     mobileLinks?.forEach((a) => {
       a.addEventListener("click", (e) => {
