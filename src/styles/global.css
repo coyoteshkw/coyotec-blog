@@ -128,3 +128,17 @@
 [data-theme="dark"] .notbyai-badge-dark {
   display: inline-block;
 }
+
+/* ---- 开往 travellings 徽标：白日显示 white 版本，深色模式显示 black 版本 ---- */
+.travellings-logo-light {
+  display: inline-block;
+}
+.travellings-logo-dark {
+  display: none;
+}
+[data-theme="dark"] .travellings-logo-light {
+  display: none;
+}
+[data-theme="dark"] .travellings-logo-dark {
+  display: inline-block;
+}
