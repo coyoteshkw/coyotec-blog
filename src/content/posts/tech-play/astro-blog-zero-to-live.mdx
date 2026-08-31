@@ -1,6 +1,7 @@
 ---
 pubDatetime: 2026-06-21T18:26:20.000+08:00
-title: 从零到上线，我把博客迁移到Astro时遇到的坑与解法
+modDatetime: 2026-08-31T23:05:20.000+08:00
+title: 从零到上线，迁移和修改一个Astro博客全过程
 featured: true
 draft: false
 tags:
@@ -8,6 +9,12 @@ tags:
   - 博客
 description: 这篇神秘的文章记录了使用Astro框架重建个人博客的全过程，包括博客改造、如何挑选域名、配置DNS解析，以及解决部署时常见的301重定向问题。
 ---
+
+import Collapse from "@/components/Collapse.astro"
+
+> [!NOTE]- 修订记录
+> - 2026-06-21，完成初版并发布
+> - 2026-08-31，修订排版，添加一只小猫，它很可爱！
 
 ## Table of contents
 
@@ -27,6 +34,16 @@ Astro 是一个集多功能于一体的 Web 框架。访问速度快，内容驱
 ![image.png](https://img.055933.xyz/file/1781589362764_image.png)
 
 **过渡效果优秀**这一点值得单独提一下，因为我的另一个站点[萨查周记](https://coyotec-weekly.pages.dev)本来是打算用[Astro Cactus](https://astro-cactus.chriswilliams.dev/)这个主题的，但是在Vibe Coding改造后，发现在本地运行时暗黑模式下，链接跳转会全屏放闪光弹，给所有人吃高闪。
+
+<Collapse title="没什么，只是折叠了一只吃高闪的小猫，以防你在深夜打开被闪到">
+
+  <figure>
+    <img class="w-2/3 md:w-1/3" src="https://img.055933.xyz/file/1788189044097_giphy__2_.gif" alt="cat-flashbang.gif" />
+    <figcaption>调试Cactus那天晚上的我</figcaption>
+  </figure>
+  
+</Collapse>
+
 
 部署到Cloudflare后有所好转，随心情放闪光弹，经过多次修复仍然无法解决，要么彻底放弃它的过渡效果，要么就期望用户不会在一个深夜不开灯地打开这个网站然后被闪瞎眼，于是只得放弃，改用和主站一样的Paper主题，保障用户眼睛健康
 
@@ -51,7 +68,7 @@ bun create astro@latest -- --template satnaing/astro-paper
 
 下载完成后安装依赖并启动，测试是否能正常运作。这里以pnpm为例
 
-```
+```bash
 pnpm install
 pnpm dev
 ```
@@ -82,39 +99,10 @@ export default defineAstroPaperConfig({
     googleVerification: "your-google-verification",
 
   },
-  posts: {
-    perPage: 4,
-    perIndex: 4,
-    scheduledPostMargin: 15 * 60 * 1000,
-  },
-  features: {
-    lightAndDarkMode: true,
-    dynamicOgImage: true,
-    showArchives: true,
-    showBackButton: true,
-    editPost: {
-      enabled: true,
-      url: "https://github.com/coyoteshkw/coyotec-blog/edit/main/",
-    },
-    search: "pagefind",
-  },
-  socials: [
-    { name: "github",   url: "https://github.com/coyoteshkw" },
-    { name: "mail",     url: "mailto:coyoteshkw@proton.me" },
-  ],
-  shareLinks: [
-    { name: "whatsapp", url: "https://wa.me/?text=" },
-    { name: "facebook", url: "https://www.facebook.com/sharer.php?u=" },
-    { name: "x",        url: "https://x.com/intent/post?url=" },
-    { name: "telegram", url: "https://t.me/share/url?url=" },
-    { name: "pinterest", url: "https://pinterest.com/pin/create/button/?url=" },
-    { name: "mail",     url: "mailto:?subject=See%20this%20post&body=" },
-  ],
 });
-
 ```
 
-features的editPost属性指的是文章页面的 `Edit post` 按钮，填对了以后点击会跳转到Github上这篇文章的编辑页面，前提是你是仓库的使用者并且已经登录。
+配置中的editPost指的是文章页面的 `Edit post` 按钮，点击会跳转到Github上这篇文章对应的编辑页面，前提是你是仓库的使用者并且已经登录。
 
 ```js file="astro-paper.config.ts"
 editPost: {
@@ -123,7 +111,7 @@ editPost: {
 },
 ```
 
-基本格式是`https://github.com/username/仓库名/edit/正在使用的仓库/`
+基本格式是`https://github.com/username/仓库名/edit/对应分支/`
 
 `astro.config.ts` 部分可以做本地化，默认只有英文。在 `locales` 处先添加 `zh-CN`
 
@@ -224,21 +212,20 @@ fonts:
 :root {
   --font-google-sans-code: "Google Sans Code", monospace;
 }
-
 ```
 
 之后本地调试时只需要这样写，就能跳过网络字体的步骤，调试舒服多了
 
-```
+```bash
 USE_LOCAL_FONTS=true pnpm dev
 ```
 
 ### 3. 中文本地化
 官方支持i18n，但是没有自带的多语言翻译，得自己写。
 
-我觉得默认的英文字体很好看，引入中文字体一个没弄好容易拖慢网页加载速度，所以没有在主站使用。但是在weekly周记站点我修改了部分英文。具体方法：在 `src/i18n/lang` 文件夹下添加 `zh-CN.ts` 文件，对照 `en.ts` 一比一翻译成中文。
+我觉得默认的英文字体很好看，所以能保留的地方我都保留了。汉化具体方法：在 `src/i18n/lang` 文件夹下复制`en.ts` 文件，改名为 `zh-CN.ts` ，对照 `en.ts` 按需翻译为中文
 
-但是也有很不好汉化的地方，默认的目录生成方式是在需要生成的地方输入一个二级标题 `##Table of contents` ，但是它在生成以后也叫这个，无法直接翻译，要翻译得改这个组件的源代码，我觉得没必要，就保留了。
+也有些地方是无法通过这种方式汉化的，这种时候只能全站搜索改源码，但Astro Paper的结构很清晰，改起来也方便，除了主题引入的目录功能，它默认的目录生成方式是在需要生成的地方输入一个二级标题 `##Table of contents` ，但是它在生成以后也叫这个，无法直接翻译，要翻译得改这个组件的源代码，我觉得没必要，就保留了。
 
 ### 4. 动态OG图片中文修复
 **什么是动态OG图片？**
@@ -264,15 +251,10 @@ fonts: [
 ```
 
  新增 `src/utils/getGoogleFontCss.ts` ，从 Google Fonts API 拉取 CSS，解析出字体文 
- 件 URL，返回给 Satori 使用。不依赖 Astro 的 <Font> 组件（那个只在模  
+ 件 URL，返回给 Satori 使用。不依赖 Astro 的 `<Font>` 组件（那个只在模  
  板里生效，Satori 是服务端渲染用不上）。
  
 ```js file="src/utils/getGoogleFontCss.ts"
-/**
- * Fetch Google Fonts CSS and return the raw CSS text.
- * Used to obtain font-file URLs for Satori without relying on
- * Astro’s Font component (which only downloads fonts referenced in templates).
- */
 export async function getGoogleFontCss(
   family: string,
   weights: number[],
@@ -318,14 +300,14 @@ export function parseFontUrls(css: string): { weight: number; url: string }[] {
  
  两个导出函数：                                                       
  - getGoogleFontCss(family, weights) — 拉取                           
-   https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700 
- - parseFontUrls(css) — 从 CSS 里正则提取 font-weight: 400 + url(...)  配对
+   `https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700`
+ - parseFontUrls(css) — 从 CSS 里正则提取 `font-weight: 400 + url(...)` 配对
 
 生成的图片大概长这样：
 
 ![image](https://coyoteshkw.com/posts/games/how-to-set-up-a-minecraft-server/index.png)
 
-### 5. logo，favicon
+### 5. 网站logo和favicon
 本来是想让AI生成一个图标，但是它生成的图标都太大了，压缩不下来。网站刚上线，不希望在这些地方花费大量的时间，最终我在 [Svgrepo网站](https://www.svgrepo.com/)挑选了一条小狼图片。很推荐这个网站，图标全都允许商用，而且种类丰富，光wolf就能搜出几十个来
 
 ![SVGRepo网站](https://img.055933.xyz/file/1781694138163_image.png)
@@ -339,18 +321,45 @@ export function parseFontUrls(css: string): { weight: number; url: string }[] {
 <link rel="icon" type="image/png" sizes="32x32" href={getAssetPath("favicon-32x32.png")} />
 ```
 
-### 6. 文章中英文空格问题
+### 6. 文章中英文排版问题
 这也是一个由于Google Sans Code字体闹出的麻烦，等宽字体的空格很大，因此我原本的老方案：在本地写完后丢给Obsidian的Pangu插件添加一下空格再丢回来完事，就变得完全不可用。这个空格实在是太宽了
 
 ![image.png](https://img.055933.xyz/file/1781694584371_image.png)
 
-于是让Pi Coding Agent写了一个插件，自动在中英文之间添加一个瘦空格，视觉效果上比等宽空格要好很多，而且不用手动添加空格了
+于是让Pi Coding Agent写了一个remark插件，自动在中英文之间添加一个瘦空格，视觉效果上比等宽空格要好很多，而且不用手动添加空格了
 
 > 缺点是如果你不小心手动添加了空格，那还是这么宽，只能自己多多注意。
 > 
 > 以及如果不使用等宽英文字体，以上问题和插件，统统不需要。现在我换用了Rubik字体，上述烦恼其实已经没有了
 
 这一套是在编译的时候运行的，不会对运行速度产生影响，反正我用的是Cloudflare Pages没有编译时间限制，随便它编
+
+8月31日新增：我完善了这个插件，现在除了在中英文之间添加空格，行内代码块与周围、链接文本与周围文字也会自动添加空格，我试用觉得很完美。如果你想试试可以下载我的
+
+import DownloadButton from "@/components/DownloadButton.astro"
+
+<DownloadButton
+  href="https://raw.githubusercontent.com/coyoteshkw/coyotec-blog/refs/heads/main/src/utils/remarkCjkSpacing.ts"
+  filename="remarkCjkSpacing.ts"
+/>
+
+食用方法：在`astro.config.ts`文件中作为remarkPlugin引入
+
+```ts
+import { remarkCjkSpacing } from "./src/utils/remarkCjkSpacing";
+
+export default defineConfig({
+  markdown: {
+    processor: unified({
+      remarkPlugins: [
+        remarkDirective,
+        parseDirectiveNode,
+        remarkCjkSpacing,
+      ],
+    }),
+  },
+});
+```
 
 ### 7. Callout踩坑
 Paper文档说现在支持了Obsidian的callout格式，我真信了，弄了半天发现，只是说支持了，也没说内置啊！
@@ -361,9 +370,11 @@ Paper文档说现在支持了Obsidian的callout格式，我真信了，弄了半
 
 经过大力气后发现，不是真的没生效，而是在「暗黑模式」不生效
 
-rehype-callouts使用  `.dark` 类切换暗色模式，但Paper使用 `data-theme="dark"` 属性切换暗色模式。所以`.dark .callout` 选择器永远匹配不到，callout文字样式一直处于浅色模式状态， `mix-blend-mode: darken` 在暗色模式下将浅色文字混合为深色后融入了背景，从外面看就是一旦切成暗黑模式，callout内部的文字一坨黑。
+rehype-callouts检测到`.dark`类切换暗色模式，但Paper使用 `data-theme="dark"` 属性切换暗色模式。所以`.dark .callout` 选择器永远匹配不到，callout文字样式一直处于浅色模式状态， 而`mix-blend-mode: darken` 在暗色模式下会将浅色文字混合为深色，文字完美融入背景，造成callout块内部无文字的假象。
     
-修复方法：在 `global.css` 的 @layer 外部设置 `.callout { mix-blend-mode: normal }` 。必须放在 @layer 外，因为 Obsidian 主题 CSS 不在任何 cascade layer 内，无 layer 样式优先级高于 @layer 内样式。
+修复方法：在`global.css`中禁用`.callout`的`mix-blend-mode`属性，一劳永逸
+
+修复方法：在 `global.css` 的 @layer 外部设置 `.callout { mix-blend-mode: normal }` 。必须放在 @layer 外，因为Callout库的CSS无前置层级，无 layer 样式优先级高于 @layer 内样式。
 
 ```css file="src/styles/global.css"
 .callout {
@@ -371,13 +382,29 @@ rehype-callouts使用  `.dark` 类切换暗色模式，但Paper使用 `data-them
 }
 ```
     
-同时修正 `details:not(.callout)` 选择器，避免可折叠 callout 内文字被隐藏。
+同时修改`details`选择器为`details:not(.callout)`，避免可折叠 callout 内文字被隐藏。
+
+```css file="src/styles/typography.css"
+@layer base {
+  .app-prose {
+    @apply prose;
+    
+    /* [!code --] */
+    details {
+      @apply text-foreground ...
+    }
+    /* [!code ++] */
+    details:not(.callout) {
+      @apply text-foreground ...
+    }
+  }
+```
 
 > [!NOTE]
 > 
 > 这是一条信息
 > 
-> 支持包括: NOTE, ABSTRACT, INFO, TODO, TIP, SUCCESS, QUESTION, WARNING, FAILURE, DANGER, BUG, EXAMPLE, QUOTE 
+> 支持的语法包括: NOTE, ABSTRACT, INFO, TODO, TIP, SUCCESS, QUESTION, WARNING, FAILURE, DANGER, BUG, EXAMPLE, QUOTE 
 > 
 > 所有可用Callout查看[lin-stephanie/rehype-callouts](https://github.com/lin-stephanie/rehype-callouts)
 
@@ -417,6 +444,14 @@ supabase免费版用量目前来说够用了。
 ```
 :link[名称]{id=网站}
 ```
+
+### 10. 静态博客文章推荐功能
+
+本功能完全参照夏叶大佬的[这篇文章](https://blog.cuteleaf.cn/posts/dev-notes/astro-blog-recommend-algorithm/)实现，只是在样式上做了本地化处理，并且我认为处理的还有纰漏，做的并不好
+
+该功能会根据标签、标题、发布时间等属性排版出相似度最高的5篇文章，在文末的See also部分展示
+
+![image.png](https://img.055933.xyz/file/1788194072560_image.png)
 
 ## 线上部署：Cloudflare Pages？ Workers？
 Cloudflare Pages是一个面向前端的托管平台，而Workers更进一步，是一个Serverless计算平台。Workers可以做到比Pages更多的事情

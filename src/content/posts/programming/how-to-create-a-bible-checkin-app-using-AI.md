@@ -1,6 +1,6 @@
 ---
 pubDatetime: 2026-06-07T00:55:20.000+08:00
-modDatetime: 2026-07-30T07:02:36Z
+modDatetime: 2026-08-31T16:47:28Z
 title: 圣经打卡应用，从需求设计到部署上线
 featured: true
 draft: false
@@ -24,30 +24,30 @@ description: 讲述如何通过Reasonix CLI + DeepSeek搭建圣经打卡应用�
 
 我知道这个需求不算特别大众，所以不打算花太多的时间去写，这也是为什么我采用AI全程Vibe Coding
 
-首先我和Deepseek网页端探讨了一下基本架构，他给出了几个方案。一个是前后端分离，用FastAPI做后端，前端用Vue写，数据库用MySQL。另一个是用Next.js做全站开发，数据库用SQLite。最后我决定用Nuxt.js开发，因为这样整体技术栈我完全了解，如果今后想要手动做改动，也比抓瞎现学要好
+首先我和Deepseek网页端探讨了一下基本架构，他给出了几个方案。一个是前后端分离，用FastAPI做后端，前端用Vue写，数据库用MySQL。另一个是用Next.js做全栈开发，数据库用SQLite。最后我决定用Nuxt.js开发，因为这样整体技术栈我完全了解，如果今后想要手动做改动，也比抓瞎现学要好
 
 DS提供了基本的数据库设计方案，感觉还不错。提到了如果真的按照小节而不是章来记录进度，那么数据库将会很庞大。圣经和合本大致有3000节。每天读一节然后指望自己能看到进度的这种可能性也不大...所以就这样了
 
 ## Reasonix是什么？
-[reasonix](https://github.com/esengine/DeepSeek-Reasonix/blob/main-v2/README.zh-CN.md)是面向终端的 DeepSeek 原生 AI coding agent。专门为DS做了前缀缓存调优，简而言之省钱，提高缓存命中率。
+[Reasonix](https://github.com/esengine/DeepSeek-Reasonix/blob/main-v2/README.zh-CN.md)是面向终端的 DeepSeek 原生 AI coding agent。专门为DS做了前缀缓存调优，简而言之省钱，提高缓存命中率。
 
-为什么用DeepSeek？也是为了省钱，二五折太香，中转站不安全
+为什么用DeepSeek？也是为了<u>省钱</u>，二五折太香，<u title="我反正不敢">中转站</u>不安全
 
-综合用下来，reasonix下的DeepSeek还是不太聪明，只会埋头干活，没有整体工程思维，中途遇到了其他bug也会装作没看见。Claude code cli下的DS看起来就聪明的多。但是Reasonix仍旧因为省钱而主导了这次开发。一直到项目上线，大概花了6-7块钱
+综合用下来，Reasonix下的DeepSeek还是不太聪明，只会埋头干活，没有整体工程思维，中途遇到了其他bug也会装作没看见。Claude Code CLI下的DS看起来就聪明的多。但是Reasonix仍旧因为省钱而主导了这次开发。一直到项目上线，大概花了6-7块钱
 
 ## Skills是什么？
 一个让你的AI变得更聪明，有智能的提示词。
 
 吹的很花，但对于新手，没人和我讲清楚怎么用，怎么马上就用上。
 
-各大知名厂商都有自己的skills安装方法，但为了让除了Claude Code CLI和Codex之外的CLI也能用上，我使用了[这个工具](https://github.com/vercel-labs/skills)。之后安装都只需要类似以下这行代码
+各大知名厂商都有自己的skills安装方法，但为了让除了Claude Code CLI和Codex之外的CLI也能用上，我使用了[Skills工具](https://github.com/vercel-labs/skills)。使用它安装Skill只需要在终端敲一行类似以下的代码
 
 ```bash
 # 安装frontend-design
 npx skills add anthropics/claude-code
 ```
 
-各种各样的Skill可以在[Agent Skills 市场](https://skillsmp.com/zh)找到
+如果不知道自己想要什么样的Skill，可以在[Agent Skills 市场](https://skillsmp.com/zh)逛逛
 
 ## Superpower Skill？
 > 参考：
@@ -81,7 +81,7 @@ npx skills add obra/superpowers
 
 很快它就写完了前后端让我过目，不得不说比豆包Trae写的好多了，整体界面也保持了一致风格，没有Element Plus UI一套到底，写了一套带日历、进度收集、注册登录、路由校验的完整系统。但这还没完
 
-**我首先发现它默认使用的打卡方式是自己填写章和节，并且格式很不明晰，这也暴露出我前期的需求分析不足。** 章和节都可以随意填写，创世纪只有50章你可以写读到了第100章，但是在数据库中是有插入圣经每一卷书的章节数的，我立即要求它做测试驱动，检查每个接口是否正常并且也需要测试边界值。这一次AI很详细地完成了任务，并且根据我的要求将章节的选择改为了数字选择器（或者叫网格选择器）。但是章和节之间的界限仍然不明确。最终我自己明确了需求：在只填写一个章节时，展示一个节范围选择，有≥两个章节时，有两个节选择。不填的情况下默认为整章。AI完美地完成了这个需求，并且自动添加了不填的情况下默认选择已阅读整章的功能。并且为不同的情况添加了不同的打卡记录卡片样式。
+**首先，我发现它默认使用的打卡方式是由用户自己填写章和节，并且格式很不明晰，这也暴露出我前期的需求分析不足。** 章和节都可以随意填写，创世纪只有50章你可以写读到了第100章，但是在数据库中是有插入圣经每一卷书的章节数的，我立即要求它做测试驱动，检查每个接口是否正常并且也需要测试边界值。这一次AI很详细地完成了任务，并且根据我的要求将章节的选择改为了数字选择器（或者叫网格选择器）。但是章和节之间的界限仍然不明确。最终我自己明确了需求：**在只填写一个章节时，展示一个节范围选择，有≥两个章节时，有两个节选择。不填的情况下默认为整章。AI完美地完成了这个需求，并且自动添加了不填的情况下默认选择已阅读整章的功能。并且为不同的情况添加了不同的打卡记录卡片样式。 **
 
 ![单卷-多卷对比图](https://a692b0fb.cloudflare-imgbed-czl.pages.dev/file/1780760798411_image.png)
 
