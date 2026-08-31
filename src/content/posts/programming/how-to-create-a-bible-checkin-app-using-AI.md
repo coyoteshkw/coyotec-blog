@@ -1,6 +1,6 @@
 ---
 pubDatetime: 2026-06-07T00:55:20.000+08:00
-modDatetime: 2026-08-31T17:03:10Z
+modDatetime: 2026-08-31T17:03:20.000+08:00
 title: 圣经打卡应用，从需求设计到部署上线
 featured: true
 draft: false
