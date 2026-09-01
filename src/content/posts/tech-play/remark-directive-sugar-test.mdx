@@ -1,0 +1,223 @@
+---
+pubDatetime: 2026-07-04T00:00:00.000+08:00
+modDatetime: 2026-09-01T00:00:00.000+08:00
+title: 博客常用语法测试
+featured: false
+draft: false
+tags:
+  - 测试
+  - markdown
+description: 测试视频嵌入、图片题注等扩展 markdown 语法
+---
+
+展示包括remark-directive-sugar插件在内的，博客会使用的多种语法
+
+## 视频嵌入
+
+### YouTube
+
+```
+::video-youtube[Astro in 100 Seconds]{#gxBkghlglTg}
+```
+
+::video-youtube[Astro in 100 Seconds]{#gxBkghlglTg}
+
+### Bilibili
+
+```
+::video-bilibili{id=BV1MC4y1c7Kv}
+```
+
+::video-bilibili{id=BV1MC4y1c7Kv}
+
+## 图片
+
+### 图片题注
+
+```
+:::image-figure[这是一张带题注的图片，支持 **Markdown** 语法。]
+![](https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg)
+:::
+```
+
+:::image-figure[这是一张带题注的图片，支持 **Markdown** 语法。]
+![](https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg)
+:::
+
+### 带链接的图片
+
+```
+:::image-a{href="https://github.com"}
+![GitHub](https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg)
+:::
+```
+
+:::image-a{href="https://github.com"}
+![GitHub](https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg)
+:::
+
+### 纯图片容器
+
+```
+:::img-div
+![](https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg)
+:::
+```
+
+:::img-div
+![](https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg)
+:::
+
+### 原生语法
+
+原生语法支持TailwindCSS
+
+```html
+<figure>
+  <img src="https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg" class="w-1/2 mx-auto" />
+  <figcaption>这是一张带题注的图片，支持 **Markdown** 语法。</figcaption>
+</figure>
+```
+
+<figure>
+  <img src="https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg" class="w-1/2 mx-auto" />
+  <figcaption>这是一张带题注的图片，并不支持 **Markdown** 语法。</figcaption>
+</figure>
+
+## 链接按钮
+
+```
+:link{#@lin-stephanie}
+```
+
+Example 1: :link{#@lin-stephanie}
+
+```
+:link{#@lin-stephanie tab=repositories}
+```
+
+Example 2: :link{#@lin-stephanie tab=repositories}
+
+```
+:link[Vite]{id=@vitejs}
+```
+
+Example 3: :link[Vite]{id=@vitejs}
+
+```
+:link[Vite]{id=@vitejs tab=org-people}
+```
+
+Example 4: :link[Vite]{id=@vitejs tab=org-people}
+
+```
+:link{#lin-stephanie/remark-directive-sugar}
+```
+
+Example 5: :link{#lin-stephanie/remark-directive-sugar}
+
+```
+:link[Astro]{id=withastro/astro}
+```
+
+Example 6: :link[Astro]{id=withastro/astro}
+
+```
+:link{#remark-directive-sugar}
+```
+
+Example 7: :link{#remark-directive-sugar}
+
+```
+:link{id=remark-directive-sugar tab=dependencies}
+```
+
+Example 8: :link{id=remark-directive-sugar tab=dependencies}
+
+```
+:link{id=https://developer.mozilla.org/en-US/docs/Web/JavaScript}
+```
+
+Example 9: :link{id=https://developer.mozilla.org/en-US/docs/Web/JavaScript}
+
+```
+:link[Google]{id=https://www.google.com/}
+```
+
+Example 10: :link[Google]{id=https://www.google.com/}
+
+```
+:link[Vite]{id=@vitejs url=https://vite.dev/}
+```
+
+Example 11: :link[Vite]{id=@vitejs url=https://vite.dev/}
+
+```
+:link[Vite]{id=@vitejs img=https://vitejs.dev/logo.svg}
+```
+
+Example 12: :link[Vite]{id=@vitejs img=https://vitejs.dev/logo.svg}
+
+## 徽标
+
+```
+:badge[New]
+```
+
+:badge[New]
+
+支持CSS
+
+```
+:badge[Success]{style="color: black; background-color: #aaf233"}
+```
+
+:badge[Success]{style="color: black; background-color: #aaf233"}
+
+```
+:::github{repo="withastro/astro"}
+```
+
+## 代码
+
+### 代码高亮
+
+`// [!code highlight]`
+
+代码高亮只对部分语法生效
+
+```javascript
+function hello() {
+  console.log('这行是普通的');
+  console.log('这行会高亮显示'); // [!code highlight]
+}
+```
+
+### 代码变更
+
+`// [!code --]`
+`// [!code ++]`
+
+```javascript
+function calculate(a, b) {
+  return a + b; // [!code --]
+  return a * b; // [!code ++]
+}
+```
+
+### 无高亮语言的代码高亮
+
+必须放在顶部，不能同行，注释语法不限制
+
+```
+function process() {
+  // [!code highlight]
+  console.log('这行会高亮');
+  <!-- [!code ++] -->
+  console.log('这行也会');
+}
+```
+
+### github卡片
+
+:::github{repo="coyoteshkw/coyotec-blog"}
