@@ -220,4 +220,53 @@ function process() {
 
 ### github卡片
 
-:::github{repo="coyoteshkw/coyotec-blog"}
+```
+::github{repo="withastro/astro"}
+```
+
+::github{repo="withastro/astro"}
+
+::github{repo="coyoteshkw/tiddlylog"}
+
+## 注解语法
+
+### markdown拓展写法
+
+```
+:term[术语]{annotation=注解}
+```
+
+:term[术语]{annotation=注解}
+
+### mdx Astro组件写法
+
+```astro
+import Term from "@/components/Term.astro" 
+<Term annotation="这是注解内容">术语</Term>
+```
+
+import Term from "@/components/Term.astro" 
+
+<Term annotation="这是注解内容">术语</Term>
+
+### 组件高级写法，支持富文本
+
+Astro组件写法，必须写在同一行，中间不能换行
+
+```astro
+<Term>术语<Fragment slot="annotation">这是<b>加粗</b>注解，含 <a href="...">链接</a></Fragment></Term>
+
+这是一个 <Term>富文本术语<Fragment slot="annotation">这是<b>加粗</b> 
+ 的注解，含一个 <a href="https://example.com">链接</a> 和 <code>代码  
+ </code></Fragment></Term> 的例子。
+
+<Term>这是一个插入了图片的注解<Fragment slot="annotation">这是<img src="https://img.055933.xyz/file/1788194072560_image.png" alt="图片注解" /></Fragment></Term>
+```
+
+<Term>术语<Fragment slot="annotation">这是<b>加粗</b>注解，含 <a href="...">链接</a></Fragment></Term>
+
+这是一个 <Term>富文本术语<Fragment slot="annotation">这是<b>加粗</b> 
+ 的注解，含一个 <a href="https://example.com">链接</a> 和 <code>代码  
+ </code></Fragment></Term> 的例子。
+
+<Term>这是一个插入了图片的注解<Fragment slot="annotation">闪光晓猫<img src="https://img.055933.xyz/file/1788189044097_giphy__2_.gif" alt="图片注解" /></Fragment></Term>
