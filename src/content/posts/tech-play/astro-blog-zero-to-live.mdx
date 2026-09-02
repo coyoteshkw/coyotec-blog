@@ -1,6 +1,6 @@
 ---
 pubDatetime: 2026-06-21T18:26:20.000+08:00
-modDatetime: 2026-08-31T23:05:20.000+08:00
+modDatetime: 2026-09-03T00:11:20.000+08:00
 title: 从零到上线，迁移和修改一个Astro博客全过程
 featured: true
 draft: false
@@ -366,15 +366,33 @@ Paper文档说现在支持了Obsidian的callout格式，我真信了，弄了半
 
 还是要自己去装，也没有说怎么装，相当于还是现场学一下Astro了
 
-安装库到注册没什么问题，最大的问题出在，样式不生效，不管我干什么，总之没效果
+```bash
+pnpm add rehype-callouts
+```
 
-经过大力气后发现，不是真的没生效，而是在「暗黑模式」不生效
+注册
 
-rehype-callouts检测到`.dark`类切换暗色模式，但Paper使用 `data-theme="dark"` 属性切换暗色模式。所以`.dark .callout` 选择器永远匹配不到，callout文字样式一直处于浅色模式状态， 而`mix-blend-mode: darken` 在暗色模式下会将浅色文字混合为深色，文字完美融入背景，造成callout块内部无文字的假象。
+```ts file="eslint.config.js"
+import rehypeCallouts from "rehype-callouts";
+```
+
+导入样式表
+
+```css file="src/styles/global.css"
+/* 我使用obsidian的样式表，可按需导入其他的类型 */
+@import "rehype-callouts/theme/obsidian";
+/* @import 'rehype-callouts/theme/github' */
+/* @import 'rehype-callouts/theme/vitepress' */
+/* @import 'rehype-callouts/theme/docusaurus' */
+```
+
+最大的问题出在，样式不生效，不管我干什么，总之没效果
+
+经过大力气后发现，不是真的没生效，而是在Paper的「暗黑模式」不生效
+
+因为rehype-callouts检测到`.dark`类切换暗色模式，但Paper使用 `data-theme="dark"` 属性切换暗色模式。所以`.dark .callout` 选择器永远匹配不到，callout样式一直处于默认的`mix-blend-mode: darken`状态，而`mix-blend-mode: darken` 在暗色模式下会将浅色文字混合为深色，文字完美融入背景，造成callout块内部无文字的假象。
     
-修复方法：在`global.css`中禁用`.callout`的`mix-blend-mode`属性，一劳永逸
-
-修复方法：在 `global.css` 的 @layer 外部设置 `.callout { mix-blend-mode: normal }` 。必须放在 @layer 外，因为Callout库的CSS无前置层级，无 layer 样式优先级高于 @layer 内样式。
+修复方法：在`global.css`中禁用`.callout`的`mix-blend-mode`属性，一劳永逸。记得放在`@layer`外，否则会被覆盖
 
 ```css file="src/styles/global.css"
 .callout {
@@ -400,11 +418,27 @@ rehype-callouts检测到`.dark`类切换暗色模式，但Paper使用 `data-them
   }
 ```
 
+我觉得默认的字体有点大，在`global.css`内改小了1px，顺便把无序列表的marker小标配色改了，否则会跟随主题配色，在callout内显得有些突兀
+
+```css
+.callout {
+  /* 解决callout在深色模式下颜色不正确的问题 */
+  mix-blend-mode: normal;
+  .callout-content {
+    font-size: 15px;
+  }
+  /* callout内部的无序列表不跟随博客整体配色 */
+  li::marker {
+    @apply text-current
+  }
+}
+```
+
 > [!NOTE]
 > 
 > 这是一条信息
 > 
-> 支持的语法包括: NOTE, ABSTRACT, INFO, TODO, TIP, SUCCESS, QUESTION, WARNING, FAILURE, DANGER, BUG, EXAMPLE, QUOTE 
+> 在导入全部样式的情况下，支持的语法包括: NOTE, ABSTRACT, INFO, TODO, TIP, SUCCESS, QUESTION, WARNING, FAILURE, DANGER, BUG, EXAMPLE, QUOTE 
 > 
 > 所有可用Callout查看[lin-stephanie/rehype-callouts](https://github.com/lin-stephanie/rehype-callouts)
 
@@ -427,7 +461,7 @@ supabase免费版用量目前来说够用了。
 ![image.png](https://img.055933.xyz/file/1781877635697_image.png)
 ![image.png](https://img.055933.xyz/file/1781877516508_image.png)
 
-原文手机端直接没有点赞了，我写了一个放在文末。再额外写了一个小功能：文章浏览过半时，点赞按钮会弹出一个气泡框鼓励用户交互^\_^，如果用户点击了就会提示谢谢~然后消失。如果什么都不做等10s后也会消失。移动端只有划到底部按钮可视时才会提示可点赞，因为本身就有一个回到顶部+目录按钮，再加一个直接失去美感了
+原博手机端直接没有点赞了，我写了一个放在文末。再额外写了一个小功能：文章浏览过半时，点赞按钮会弹出一个气泡框鼓励用户交互^\_^，如果用户点击了就会提示谢谢~然后消失。如果什么都不做等10s后也会消失。移动端只有划到底部按钮可视时才会提示可点赞，因为本身就有一个回到顶部+目录按钮，再加一个有点过多了，影响体验
 
 我觉得实际效果还是不错的。目前就这样吧:D
 
@@ -435,11 +469,14 @@ supabase免费版用量目前来说够用了。
 ![image.png](https://img.055933.xyz/file/1781793834564_image.png)
 
 ### 9. md功能拓展
+
+mdx可以引入组件，但偶尔用md会更方便
+
 :link[remark-directive-sugar]{id=https://github.com/lin-stephanie/remark-directive-sugar}是一个remark插件，拓展了默认md的功能
 
-提供 `:link`、`:badge`、`::video-`、`:::image-` 四种拓展语法，具体可以看这篇[测试文章](https://coyoteshkw.com/posts/tech-play/remark-directive-sugar-test/)
+提供 `:link`、`:badge`、`::video-`、`:::image-` 四种拓展语法，具体可以看这篇[测试文章](https://coyoteshkw.com/posts/tech-play/remark-directive-sugar-test/)，支持链接按钮、徽标、视频、图片注解，很适合轻量使用
 
-自定义链接卡片我换了默认的duckduckgo favicon接口，可以在中国大陆地区接收图标，但是其他的默认Github图标就不太好改了，所以我一律使用下列语法
+自定义链接按钮会显示favicon，我换了默认的duckduckgo favicon接口，可以在中国大陆地区接收图标，但是其他的默认Github图标就不太好改了，所以我只使用下列语法来展示链接按钮
 
 ```
 :link[名称]{id=网站}
