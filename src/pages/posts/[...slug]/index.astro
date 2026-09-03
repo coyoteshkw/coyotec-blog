@@ -56,11 +56,11 @@ type AdjacentPost = {
   filePath: string | undefined;
 } | null;
 
-type Props = {
+export interface Props {
   post: CollectionEntry<"posts">;
   prevPost: AdjacentPost;
   nextPost: AdjacentPost;
-};
+}
 
 const { post, prevPost, nextPost } = Astro.props;
 const relatedPosts = await getRelated(post, 5);
