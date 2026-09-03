@@ -70,7 +70,7 @@ const defaultFilename =
 
       btn.addEventListener("click", async (e) => {
         const href = btn.dataset.downloadHref;
-        const name = btn.dataset.downloadFilename;
+        const name = btn.dataset.downloadFilename ?? "download";
         if (!href) return;
 
         // 同源且带 download 属性时，浏览器原生已能下载，不干预
