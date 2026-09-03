@@ -355,9 +355,74 @@ const ogImage = ogImageUrl
       }, 700);
     }
   }
-  attachCopyButtons();
+  // 代码块展开/折叠：超过 350px 的代码块默认折叠，点击"展开"完全展开
+  function attachCodeCollapse() {
+    const MAX_HEIGHT = 400;
+    const codeBlocks = Array.from(document.querySelectorAll(".astro-code"));
 
-  document.addEventListener("astro:after-swap", () =>
-    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
-  );
+    for (const codeBlock of codeBlocks) {
+      // 已经折叠处理过则跳过（View Transitions 重复执行时）
+      if (codeBlock.dataset.collapseBound === "1") continue;
+
+      // 测量高度，不高的代码块不处理
+      if (codeBlock.scrollHeight <= MAX_HEIGHT) continue;
+
+      codeBlock.dataset.collapseBound = "1";
+
+      const wrapper = codeBlock.parentElement;
+      if (!wrapper) continue;
+      wrapper.classList.add("code-collapsible");
+
+      // 折叠态：竖向裁剪，横向保持可滚动
+      codeBlock.style.maxHeight = MAX_HEIGHT + "px";
+      codeBlock.style.overflowX = "auto";
+      codeBlock.style.overflowY = "hidden";
+
+      // 渐隐遮罩
+      const mask = document.createElement("div");
+      mask.className = "code-mask";
+      wrapper.appendChild(mask);
+
+      // 展开按钮（下箭头 = 展开，上箭头 = 收起）
+      const iconDown = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="m6 9 6 6 6-6"/></svg>`;
+      const iconUp = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="m18 15-6-6-6 6"/></svg>`;
+
+      const toggleBtn = document.createElement("button");
+      toggleBtn.className =
+        "code-toggle absolute left-1/2 -translate-x-1/2 bottom-3 z-10 flex items-center justify-center rounded-full bg-muted border border-muted px-3 py-1.5 text-foreground shadow transition-colors hover:bg-accent hover:text-accent-foreground";
+      toggleBtn.innerHTML = iconDown;
+      toggleBtn.setAttribute("aria-label", "展开代码");
+      wrapper.appendChild(toggleBtn);
+
+      let expanded = false;
+      toggleBtn.addEventListener("click", () => {
+        expanded = !expanded;
+        if (expanded) {
+          codeBlock.style.maxHeight = "none";
+          codeBlock.style.overflow = "auto";
+          codeBlock.style.overflowY = "visible";
+          codeBlock.style.overflowX = "auto";
+          mask.classList.add("code-mask-hidden");
+          toggleBtn.innerHTML = iconUp;
+          toggleBtn.setAttribute("aria-label", "收起代码");
+        } else {
+          codeBlock.style.maxHeight = MAX_HEIGHT + "px";
+          codeBlock.style.overflowX = "auto";
+          codeBlock.style.overflowY = "hidden";
+          mask.classList.remove("code-mask-hidden");
+          toggleBtn.innerHTML = iconDown;
+          toggleBtn.setAttribute("aria-label", "展开代码");
+        }
+      });
+    }
+  }
+
+  attachCopyButtons();
+  // 延迟到布局完成后测量高度，避免首次加载时 scrollHeight 不准
+  requestAnimationFrame(() => attachCodeCollapse());
+
+  document.addEventListener("astro:after-swap", () => {
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" });
+    requestAnimationFrame(() => attachCodeCollapse());
+  });
 </script>
