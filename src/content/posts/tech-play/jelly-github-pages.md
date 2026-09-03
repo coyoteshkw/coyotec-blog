@@ -8,6 +8,7 @@ tags:
   - 旧文
   - jekyll
 description: 真正简单的博客，对后台的要求几乎降到底层了。
+category: 折腾
 ---
 
 > [!NOTE] 2021年，青春懵懂时写的文章，今日发现了，遂搬运，作纪念
@@ -147,5 +148,3 @@ git clone xxxxxx
 1. [如何搭建一个独立博客——简明 GitHub Pages与 jekyll 教程](https://www.cnfeat.com/blog/2014/05/11/how-to-build-a-blog/)
 2. [搭建一个免费的，无限流量的Blog----github Pages和Jekyll入门](http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html)
 3. [使用Github Pages建独立博客](http://beiyuu.com/github-pages)
-
-

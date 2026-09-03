@@ -6,6 +6,7 @@ draft: false
 tags:
   - 随笔
 description: 善良的人啊，请别害怕。他也只是想回到家乡
+category: 随笔
 ---
 
 这周一，世界杯结束了

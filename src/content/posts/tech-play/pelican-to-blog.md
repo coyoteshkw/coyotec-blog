@@ -8,6 +8,7 @@ tags:
   - 旧文
   - pelican
 description: 当你不懂基础知识然后开始学博客会经历什么艰难
+category: 折腾
 ---
 
 > [!NOTE] 2021年，青春懵懂时写的文章，今日发现了，遂搬运，作纪念
@@ -199,5 +200,3 @@ MARKUP = 'md'
 MD_EXTENSIONS = 'extra'
 DEFAULT_DATE_FORMAT = '%Y%m%d' # 将默认日期格式调整为年/月/日
 ```
-
-

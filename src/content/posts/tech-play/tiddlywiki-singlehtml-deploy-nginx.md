@@ -10,6 +10,7 @@ tags:
   - 部署
   - nginx
 description: 如何部署一个tiddlywiki单文件版到服务器上呢，小编也很好奇，那就和小编一起来看看吧
+category: 折腾
 ---
 
 最近又开始尝试不同的笔记软件排列组合ing，发现比如做细碎的笔记，AI认为tiddlywiki这种「最小内容条目」的设计比起silverbullet更适合我，遂重拾tiddlywiki进行尝试

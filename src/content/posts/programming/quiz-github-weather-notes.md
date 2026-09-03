@@ -9,6 +9,7 @@ tags:
   - 前端
   - 个人笔记
 description: 小东西，开发笔记三合一
+category: 技术笔记
 ---
 
 ## Table of contents

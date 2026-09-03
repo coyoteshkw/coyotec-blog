@@ -7,6 +7,7 @@ tags:
   - 游戏
   - steamdeck
 description: 在基于Arch Linux的SteamOS系统上为老滚打mod
+category: 游戏
 ---
 
 ## Table of contents

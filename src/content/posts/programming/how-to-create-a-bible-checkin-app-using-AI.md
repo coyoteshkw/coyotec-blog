@@ -9,6 +9,7 @@ tags:
   - Bible
   - VibeCoding
 description: 讲述如何通过Reasonix CLI + DeepSeek搭建圣经打卡应用平台。耗资6块钱，肉痛。
+category: 技术笔记
 ---
 
 > [!NOTE]- 修订记录

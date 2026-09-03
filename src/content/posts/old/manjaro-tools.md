@@ -8,6 +8,7 @@ tags:
   - linux
   - manjaro
 description: Manjaro Linux 下的包管理器和常用软件备忘
+category: 折腾
 ---
 
 > [!NOTE] 2018 年写的文章，搬运留念

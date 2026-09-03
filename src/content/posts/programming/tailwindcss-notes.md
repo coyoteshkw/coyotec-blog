@@ -8,6 +8,7 @@ tags:
   - 前端
   - 个人笔记
 description: 温习小记
+category: 技术笔记
 ---
 
 ## Table of contents
