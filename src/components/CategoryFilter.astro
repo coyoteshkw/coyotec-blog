@@ -1,0 +1,59 @@
+---
+/**
+ * 分类筛选栏（CategoryFilter）
+ *
+ * 在文章列表顶部展示"全部" + 各分类，点击跳转对应分类页。
+ * 当前分类高亮。
+ *
+ * @prop {string} active - 当前激活的分类名（原文，可空）；空或"全部"时高亮"全部"
+ */
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { getUniqueCategories } from "@/utils/getUniqueCategories";
+import { slugifyStr } from "@/utils/slugify";
+import config from "@/config";
+
+type Props = {
+  active?: string;
+};
+
+const { active } = Astro.props;
+
+const posts = await getCollection("posts", ({ data }) => !data.draft);
+const categories = getUniqueCategories(posts);
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const isAll = !active;
+---
+
+<nav class="mb-6 flex flex-wrap gap-2" aria-label="文章分类">
+  <a
+    href={getRelativeLocaleUrl(locale, "posts")}
+    class:list={[
+      "rounded-md px-4 py-1.5 text-sm transition-colors border",
+      isAll
+        ? "bg-accent text-accent-foreground border-accent"
+        : "bg-muted text-foreground border-border hover:bg-muted/70",
+    ]}
+  >
+    全部
+  </a>
+  {
+    categories.map(({ category, categoryName }) => {
+      const isActive = active && slugifyStr(active) === category;
+      return (
+        <a
+          href={getRelativeLocaleUrl(locale, `category/${category}`)}
+          class:list={[
+            "rounded-md px-4 py-1.5 text-sm transition-colors border",
+            isActive
+              ? "bg-accent text-accent-foreground border-accent"
+              : "bg-muted text-foreground border-border hover:bg-muted/70",
+          ]}
+        >
+          {categoryName}
+        </a>
+      );
+    })
+  }
+</nav>
