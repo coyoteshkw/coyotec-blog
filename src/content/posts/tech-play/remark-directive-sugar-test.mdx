@@ -11,6 +11,9 @@ description: 测试视频嵌入、图片题注等扩展 markdown 语法
 category: 折腾
 ---
 
+> [!WARNING]
+> 本文部分测试用的代码块内容为AI生成，目的是快速测试功能是否可以使用并存档
+
 展示包括remark-directive-sugar插件在内的，博客会使用的多种语法
 
 ## 视频嵌入
@@ -267,7 +270,6 @@ Astro组件写法，必须写在同一行，中间不能换行
 <Term>术语<Fragment slot="annotation">这是<b>加粗</b>注解，含 <a href="...">链接</a></Fragment></Term>
 
 这是一个 <Term>富文本术语<Fragment slot="annotation">这是<b>加粗</b> 
- 的注解，含一个 <a href="https://example.com">链接</a> 和 <code>代码  
- </code></Fragment></Term> 的例子。
+ 的注解，含一个 <a href="https://example.com" class="underline">链接</a> 和 <code> some code </code></Fragment></Term> 的例子。
 
 <Term>这是一个插入了图片的注解<Fragment slot="annotation">闪光晓猫<img src="https://img.055933.xyz/file/1788189044097_giphy__2_.gif" alt="图片注解" /></Fragment></Term>
