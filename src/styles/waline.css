@@ -1,0 +1,133 @@
+/**
+ * Waline 评论系统样式 —— 对齐网站主题（夜间/日间双模式）
+ *
+ * 复用站点设计 token（--background / --foreground / --accent /
+ * --accent-foreground / --muted / --border 等，见 theme.css），
+ * 让评论系统自动跟随站点的明暗主题。
+ */
+
+/* Waline 官方基础样式 */
+@import "@waline/client/style";
+
+
+/* ===== 隐藏 Markdown 语法指引图标 ===== */
+#waline a.wl-action[href*="mastering-markdown"] {
+  display: none;
+}
+
+/* ===== 日间模式：覆盖 Waline 默认 CSS 变量 ===== */
+:root {
+  --waline-font-size: 0.9375rem !important; /* 15px，与博客正文近似 */
+
+  /* 主题色 */
+  --waline-theme-color: var(--accent) !important;
+  --waline-active-color: var(--accent) !important;
+
+  /* 常规颜色 */
+  --waline-white: #ffffff !important;
+  --waline-light-grey: var(--muted-foreground) !important;
+  --waline-dark-grey: var(--foreground) !important;
+
+  /* 布局颜色 */
+  --waline-color: var(--foreground) !important;
+  --waline-bg-color: var(--background) !important;
+  --waline-bg-color-light: var(--muted) !important;
+  --waline-bg-color-hover: var(--muted) !important;
+  --waline-border-color: var(--border) !important;
+  --waline-disable-bg-color: var(--muted) !important;
+  --waline-disable-color: var(--muted-foreground) !important;
+
+  /* 特殊颜色 */
+  --waline-bq-color: var(--muted) !important;
+
+  /* 头像 */
+  --waline-avatar-size: 2.5rem !important;
+
+  /* 徽章颜色 */
+  --waline-badge-color: var(--accent) !important;
+
+  /* 信息 */
+  --waline-info-bg-color: var(--muted) !important;
+  --waline-info-color: var(--muted-foreground) !important;
+
+  /* 渲染选择 */
+  --waline-border: 1px solid var(--border) !important;
+  --waline-box-shadow: none !important;
+
+  /* 提交按钮：文字色跟随站点的 accent-foreground（日间=白，夜间=深色） */
+  --waline-primary-color: var(--accent-foreground) !important;
+}
+
+/* ===== 夜间模式：覆盖上述变量 ===== */
+[data-theme="dark"] {
+  --waline-theme-color: var(--accent) !important;
+  --waline-active-color: var(--accent) !important;
+  --waline-light-grey: var(--muted-foreground) !important;
+  --waline-dark-grey: var(--foreground) !important;
+  --waline-color: var(--foreground) !important;
+  --waline-bg-color: var(--background) !important;
+  --waline-bg-color-light: #2a3145 !important;
+  --waline-bg-color-hover: #3b4655 !important;
+  --waline-border-color: var(--border) !important;
+  --waline-disable-bg-color: var(--muted) !important;
+  --waline-disable-color: var(--muted-foreground) !important;
+  --waline-bq-color: #2a3145 !important;
+  --waline-badge-color: var(--accent) !important;
+  --waline-info-bg-color: var(--muted) !important;
+  --waline-info-color: var(--muted-foreground) !important;
+  --waline-primary-color: var(--accent-foreground) !important;
+}
+
+/* ===== 提交按钮（primary）：用 accent-foreground 做文字色 =====
+ * Waline 默认 .wl-btn.primary 的文字色固定是 --waline-white（纯白），
+ * 夜间 accent 为浅紫时白字会很突兀。这里改用站点 accent-foreground。
+ */
+#waline .wl-btn.primary,
+#waline .wl-btn.primary:hover,
+#waline .wl-btn.primary:active {
+  color: var(--waline-primary-color) !important;
+}
+
+/* ===== 圆角与站点卡片风格保持一致 ===== */
+#waline .wl-comment {
+  border-radius: 0.75rem;
+}
+
+#waline .wl-panel,
+#waline .wl-card {
+  border-radius: 0.625rem;
+}
+
+#waline .wl-btn,
+#waline .wl-btn.primary,
+#waline .wl-action {
+  border-radius: 0.5rem;
+}
+
+#waline input.wl-input,
+#waline textarea.wl-editor {
+  border-radius: 0.5rem;
+}
+
+/* ===== 取消输入框点击/聚焦后的变色效果 =====
+ * Waline 默认 .wl-editor/.wl-input 在 :focus 时背景变为 --waline-bg-color-light，
+ * 并带 transition 颜色渐变。这里去掉聚焦变色和过渡动画，保持输入框干净透明。
+ */
+#waline .wl-input,
+#waline textarea.wl-editor,
+#waline .wl-input:focus,
+#waline textarea.wl-editor:focus {
+  background: transparent !important;
+  transition: none !important;
+}
+
+/* ===== 隐藏评论区元素 ===== */
+/* 头像：隐藏评论左侧的头像及游客/管理员徽标列 */
+#waline .wl-card-item .wl-user {
+  display: none;
+}
+
+/* 地址/浏览器/系统信息行：隐藏整条 wl-meta（含地址、浏览器、OS） */
+#waline .wl-meta {
+  display: none;
+}

@@ -1,67 +1,60 @@
-<section class="mx-auto mt-12 w-full" id="giscus-container"></section>
+---
+// 评论区组件 — Waline 评论系统
+// 服务端已部署在 Vercel：https://comment.coyoteshkw.com
+// 文档：https://waline.js.org/guide/get-started/
+---
 
-<script is:inline>
-  (function () {
-    let giscusLoadedOn = '';
+<section id="waline" class="mt-12 w-full"></section>
 
-    function getTheme() {
-      return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+<script>
+  import { init, type WalineInstance } from "@waline/client";
+
+  const SERVER_URL = "https://comment.coyoteshkw.com";
+
+  let instance: WalineInstance | null = null;
+  let loadedPath = "";
+
+  function getThemeSelector() {
+    // 主题由 <html data-theme="dark|light"> 控制，
+    // Waline 会据此注入对应的暗色 CSS 变量，切换时自动生效
+    return 'html[data-theme="dark"]';
+  }
+
+  function loadWaline() {
+    const container = document.getElementById("waline");
+    if (!container) return;
+
+    // 同一路径不重复初始化（避免 View Transitions 或重复触发）
+    const currentPath = window.location.pathname;
+    if (loadedPath === currentPath && instance) return;
+    loadedPath = currentPath;
+
+    // 初次进入或路由切换时，先销毁旧实例
+    if (instance) {
+      instance.destroy();
+      instance = null;
     }
 
-    function sendThemeToGiscus() {
-      const iframe = document.querySelector('iframe.giscus-frame');
-      if (!iframe) return;
-      iframe.contentWindow.postMessage(
-        { giscus: { setConfig: { theme: getTheme() } } },
-        'https://giscus.app'
-      );
-    }
-
-    // 主题切换时同步
-    new MutationObserver(() => sendThemeToGiscus()).observe(
-      document.documentElement,
-      { attributes: true, attributeFilter: ['data-theme'] }
-    );
-
-    function loadGiscus() {
-      const container = document.getElementById('giscus-container');
-      if (!container) return;
-
-      // 同一页面不重复加载
-      const currentPath = window.location.pathname;
-      if (giscusLoadedOn === currentPath) return;
-      giscusLoadedOn = currentPath;
-
-      // 移除旧内容
-      const existingIframe = container.querySelector('iframe.giscus-frame');
-      if (existingIframe) existingIframe.remove();
-      const existingScript = container.querySelector('script[src*="giscus"]');
-      if (existingScript) existingScript.remove();
-
-      const script = document.createElement('script');
-      script.src = 'https://giscus.app/client.js';
-      script.setAttribute('data-repo', 'coyoteshkw/coyotec-blog');
-      script.setAttribute('data-repo-id', 'R_kgDOSwxavA');
-      script.setAttribute('data-category', 'Announcements');
-      script.setAttribute('data-category-id', 'DIC_kwDOSwxavM4DCDdD');
-      script.setAttribute('data-mapping', 'pathname');
-      script.setAttribute('data-strict', '0');
-      script.setAttribute('data-reactions-enabled', '1');
-      script.setAttribute('data-emit-metadata', '0');
-      script.setAttribute('data-input-position', 'bottom');
-      script.setAttribute('data-theme', getTheme());
-      script.setAttribute('data-lang', 'zh-CN');
-      script.setAttribute('data-loading', 'lazy');
-      script.setAttribute('crossorigin', 'anonymous');
-      script.async = true;
-
-      container.appendChild(script);
-    }
-
-    loadGiscus();
-
-    document.addEventListener('astro:page-load', () => {
-      loadGiscus();
+    instance = init({
+      el: "#waline",
+      path: currentPath,
+      serverURL: SERVER_URL,
+      lang: "zh-CN",
+      dark: getThemeSelector(),
+      reaction: false,
+      noRss: true,
+      noCopyright: true,
+      pageview: false,
+      comment: true,
+      // 表情包：咕哩咕唎（哔哩哔哩），用 jsDelivr CDN（国内节点更稳）
+      emoji: ["https://cdn.jsdelivr.net/npm/@waline/emojis@1.4.0/bilibili"],
+      // 禁用图片上传功能
+      imageUploader: false,
     });
-  })();
+  }
+
+  loadWaline();
+
+  // Astro ClientRouter（View Transitions）路由切换后重新初始化
+  document.addEventListener("astro:page-load", loadWaline);
 </script>

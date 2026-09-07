@@ -3,6 +3,7 @@
 @import "./typography.css";
 @import "./github-card.css";
 @import "rehype-callouts/theme/obsidian";
+@import "./waline.css";
 
 /* 声明支持深浅色，阻止浏览器自动深色模式反相叠加 */
 :root {
