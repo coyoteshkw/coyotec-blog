@@ -50,6 +50,12 @@
       emoji: ["https://cdn.jsdelivr.net/npm/@waline/emojis@1.4.0/bilibili"],
       // 禁用图片上传功能
       imageUploader: false,
+      requiredMeta: ['nick'],
+      wordLimit: 3000,
+      // 覆盖评论输入框的 placeholder 文案
+      locale: {
+        placeholder: "评论支持Markdown，如果你想收到回复提醒，可以填写邮箱哦",
+      },
     });
   }
 
