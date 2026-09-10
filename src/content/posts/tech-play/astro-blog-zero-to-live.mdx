@@ -1,6 +1,6 @@
 ---
 pubDatetime: 2026-06-21T18:26:20.000+08:00
-modDatetime: 2026-09-03T00:11:20.000+08:00
+modDatetime: 2026-09-11T00:45:20.000+08:00
 title: 从零到上线，迁移和修改一个Astro博客全过程
 featured: true
 draft: false
@@ -16,6 +16,8 @@ import Collapse from "@/components/Collapse.astro"
 > [!NOTE]- 修订记录
 > - 2026-06-21，完成初版并发布
 > - 2026-08-31，修订排版，添加一只小猫，它很可爱！
+> - 2026-09-03，添加自定义博客部分的内容
+> - 2026-09-11，修改最后的工作流部分
 
 ## Table of contents
 
@@ -42,7 +44,7 @@ Astro 是一个集多功能于一体的 Web 框架。访问速度快，内容驱
     <img class="w-2/3 md:w-1/3" src="https://img.055933.xyz/file/1788189044097_giphy__2_.gif" alt="cat-flashbang.gif" />
     <figcaption>调试Cactus那天晚上的我</figcaption>
   </figure>
-  
+
 </Collapse>
 
 
@@ -251,10 +253,10 @@ fonts: [
 
 ```
 
- 新增 `src/utils/getGoogleFontCss.ts` ，从 Google Fonts API 拉取 CSS，解析出字体文 
- 件 URL，返回给 Satori 使用。不依赖 Astro 的 `<Font>` 组件（那个只在模  
+ 新增 `src/utils/getGoogleFontCss.ts` ，从 Google Fonts API 拉取 CSS，解析出字体文
+ 件 URL，返回给 Satori 使用。不依赖 Astro 的 `<Font>` 组件（那个只在模
  板里生效，Satori 是服务端渲染用不上）。
- 
+
 ```js file="src/utils/getGoogleFontCss.ts"
 export async function getGoogleFontCss(
   family: string,
@@ -298,9 +300,9 @@ export function parseFontUrls(css: string): { weight: number; url: string }[] {
 }
 
 ```
- 
- 两个导出函数：                                                       
- - getGoogleFontCss(family, weights) — 拉取                           
+
+ 两个导出函数：
+ - getGoogleFontCss(family, weights) — 拉取
    `https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700`
  - parseFontUrls(css) — 从 CSS 里正则提取 `font-weight: 400 + url(...)` 配对
 
@@ -330,7 +332,7 @@ export function parseFontUrls(css: string): { weight: number; url: string }[] {
 于是让Pi Coding Agent写了一个remark插件，自动在中英文之间添加一个瘦空格，视觉效果上比等宽空格要好很多，而且不用手动添加空格了
 
 > 缺点是如果你不小心手动添加了空格，那还是这么宽，只能自己多多注意。
-> 
+>
 > 以及如果不使用等宽英文字体，以上问题和插件，统统不需要。现在我换用了Rubik字体，上述烦恼其实已经没有了
 
 这一套是在编译的时候运行的，不会对运行速度产生影响，反正我用的是Cloudflare Pages没有编译时间限制，随便它编
@@ -392,7 +394,7 @@ import rehypeCallouts from "rehype-callouts";
 经过大力气后发现，不是真的没生效，而是在Paper的「暗黑模式」不生效
 
 因为rehype-callouts检测到`.dark`类切换暗色模式，但Paper使用 `data-theme="dark"` 属性切换暗色模式。所以`.dark .callout` 选择器永远匹配不到，callout样式一直处于默认的`mix-blend-mode: darken`状态，而`mix-blend-mode: darken` 在暗色模式下会将浅色文字混合为深色，文字完美融入背景，造成callout块内部无文字的假象。
-    
+
 修复方法：在`global.css`中禁用`.callout`的`mix-blend-mode`属性，一劳永逸。记得放在`@layer`外，否则会被覆盖
 
 ```css file="src/styles/global.css"
@@ -400,14 +402,14 @@ import rehypeCallouts from "rehype-callouts";
   mix-blend-mode: normal;
 }
 ```
-    
+
 同时修改`details`选择器为`details:not(.callout)`，避免可折叠 callout 内文字被隐藏。
 
 ```css file="src/styles/typography.css"
 @layer base {
   .app-prose {
     @apply prose;
-    
+
     /* [!code --] */
     details {
       @apply text-foreground ...
@@ -436,11 +438,11 @@ import rehypeCallouts from "rehype-callouts";
 ```
 
 > [!NOTE]
-> 
+>
 > 这是一条信息
-> 
-> 在导入全部样式的情况下，支持的语法包括: NOTE, ABSTRACT, INFO, TODO, TIP, SUCCESS, QUESTION, WARNING, FAILURE, DANGER, BUG, EXAMPLE, QUOTE 
-> 
+>
+> 在导入全部样式的情况下，支持的语法包括: NOTE, ABSTRACT, INFO, TODO, TIP, SUCCESS, QUESTION, WARNING, FAILURE, DANGER, BUG, EXAMPLE, QUOTE
+>
 > 所有可用Callout查看[lin-stephanie/rehype-callouts](https://github.com/lin-stephanie/rehype-callouts)
 
 ### 8. 点赞按钮
@@ -462,7 +464,7 @@ supabase免费版用量目前来说够用了。
 ![image.png](https://img.055933.xyz/file/1781877635697_image.png)
 ![image.png](https://img.055933.xyz/file/1781877516508_image.png)
 
-原博手机端直接没有点赞了，我写了一个放在文末。再额外写了一个小功能：文章浏览过半时，点赞按钮会弹出一个气泡框鼓励用户交互^\_^，如果用户点击了就会提示谢谢~然后消失。如果什么都不做等10s后也会消失。移动端只有划到底部按钮可视时才会提示可点赞，因为本身就有一个回到顶部+目录按钮，再加一个有点过多了，影响体验
+原博手机端~~直接没有点赞了~~在我看的时候还没有手机端的点赞按钮，我自己写了一个放在文末。再额外写了一个小功能：文章浏览过半时，点赞按钮会弹出一个气泡框鼓励用户交互^\_^，如果用户点击了就会提示谢谢~然后消失。如果什么都不做等10s后也会消失。移动端只有划到底部按钮可视时才会提示可点赞，因为本身就有一个回到顶部+目录按钮，再加一个有点过多了，影响体验
 
 我觉得实际效果还是不错的。目前就这样吧:D
 
@@ -563,7 +565,7 @@ Workers的功能更多，可以为Astro搭建简易博客后端，可以做更�
 
 > [!NOTE]
 > 因为我还有周记，所以还添加了子域名，用作区分
-> 
+>
 > 子域名是什么：weekly.coyoteshkw.com blog.coyoteshkw.com 这种东西
 
 ## 谷歌收录、必应收录
@@ -585,7 +587,7 @@ export default defineAstroPaperConfig({
 
 为了加快文章收录，在「站点地图」处提交我们的sitemap。
 
-> [!WARNING] 
+> [!WARNING]
 > 用Paper主题的话提交 `sitemap-index.xml` 而不是 `sitemap.xml`
 
 ![image.png](https://img.055933.xyz/file/1782029664010_image.png)
@@ -595,11 +597,11 @@ export default defineAstroPaperConfig({
 提交后要做的事情就就只有努力写文章、提交文章和等待
 
 ## 附录1：重定向
-我提交Cloudflare自带域名的时间有点早，所以通过301重定向的方式先把流量分过去，以后再删除默认域名。
+我在提交Cloudflare自带域名到Google Console之后很久才购买的域名，因此前域名已经被收录了，直接下掉不好，通过301重定向的方式先把流量分过去，以后再考虑删除默认域名。
 
-Cloudflare提供批量重定向方式，可以将某个域名和其下的所有资源全部重定向到另一个url
+Cloudflare提供批量重定向方式，可以将某个域名和其下的所有资源全部重定向到另一个URL
 
-打开cf面板「交付与性能」下第一项，先添加一个批量重定向列表
+打开CF面板「交付与性能」下第一项，先添加一个批量重定向列表
 
 ![image.png](https://img.055933.xyz/file/1782030794841_image.png)
 
@@ -607,9 +609,11 @@ Cloudflare提供批量重定向方式，可以将某个域名和其下的所有�
 
 ![image.png](https://img.055933.xyz/file/1782031027700_image.png)
 
-然后你要再创建一个「批量重定向规则」（刚才那个是批量重定向规则「列表」），选择刚才创建的列表，保存并部署即可。几分钟后可以测试是否成功
+再创建一个「批量重定向规则」（刚才那个是批量重定向规则「列表」），选择刚才创建的列表，保存并部署即可。几分钟后可以测试是否成功重定向
 
 ![image.png](https://img.055933.xyz/file/1782031196734_image.png)
+
+即使你没有提交自带域名，也可以执行此步骤来提高主域名的权重
 
 ## 附录2：图床推荐
 
@@ -622,7 +626,9 @@ Cloudflare提供批量重定向方式，可以将某个域名和其下的所有�
 ![image.png](https://img.055933.xyz/file/1782032532524_image.png)
 
 ## 附录3：个人写文章流程
-基本过程：**files.md内写完 → neovim内看排版 → 博客内格式精修 → 发布**
+基本过程：<u> ~~files.md~~ markedit内写完 → neovim内看排版 → 博客内格式精修 → 发布</u>
+
+<Collapse title="修订前内容">
 
 files.md是一个浏览器内markdown软件，可同步到本地。非常轻量。要知道这些流程能够出现的主要原因是这台8G的Mac很难支持我在后台一直开着Obsidian然后用Aerospace卡顿地切来切去
 
@@ -631,3 +637,11 @@ files.md是一个浏览器内markdown软件，可同步到本地。非常轻量�
 发布后时不时回看一下博客，如果有发现错字或需要补充的内容，通过 `Edit` 按钮在博客内精修，有大量内容的话补充回原文章（复制） → git push → 如果在Github上修改了，本地先pull一下再push。如果没有pull就提交了，那就pull --rebase
 
 > files.md更像是我的个人记事本，而blog项目内都是真的要发布的文章，所以它们之间是我手动同步的，而不是用同一个仓库
+
+</Collapse>
+
+MarkEdit是一个MacOS原生MD编辑工具，并非所见即所得，也没有高级的功能，但是很适合快速编写和检查排版
+
+由于一种我也不知道是什么的效应，在手机上检查文章会比在电脑上更加容易发现问题，我会时不时通过手机回看我的文章，发现哪里不对就直接截图，用编辑器手动圈一下，等到上机时翻出来统一修订
+
+初版会通过tiddlywiki或silverbullet进行存档，后续对博客的更新不会同步过去除非有重大改动，避免一来一回耗费精力
