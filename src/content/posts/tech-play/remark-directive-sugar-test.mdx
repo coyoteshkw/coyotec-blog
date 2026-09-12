@@ -1,14 +1,14 @@
 ---
-pubDatetime: 2026-07-04T00:00:00.000+08:00
-modDatetime: 2026-09-01T21:00:00.000+08:00
+pubDatetime: 2026-07-04
+modDatetime: 2026-09-12T23:32:20.000+08:00
 title: 博客常用语法测试
 featured: false
 draft: false
 tags:
-  - 测试
-  - markdown
-description: 测试视频嵌入、图片题注等扩展 markdown 语法
+- 测试
+- markdown
 category: 折腾
+description: 测试视频嵌入、图片题注等扩展 markdown 语法
 ---
 
 > [!WARNING]
@@ -85,7 +85,7 @@ category: 折腾
 
 <figure>
   <img src="https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg" class="w-1/2 mx-auto" />
-  <figcaption>这是一张带题注的图片，并不支持 **Markdown** 语法。</figcaption>
+  <figcaption>这是一张带题注的图片，支持 **Markdown** 语法。~~说实话我也不知道为什么会支持~~</figcaption>
 </figure>
 
 ## 链接按钮
@@ -249,7 +249,7 @@ import Term from "@/components/Term.astro"
 <Term annotation="这是注解内容">术语</Term>
 ```
 
-import Term from "@/components/Term.astro" 
+import Term from "@/components/Term.astro"
 
 <Term annotation="这是注解内容">术语</Term>
 
@@ -269,7 +269,32 @@ Astro组件写法，必须写在同一行，中间不能换行
 
 <Term>术语<Fragment slot="annotation">这是<b>加粗</b>注解，含 <a href="...">链接</a></Fragment></Term>
 
-这是一个 <Term>富文本术语<Fragment slot="annotation">这是<b>加粗</b> 
+这是一个 <Term>富文本术语<Fragment slot="annotation">这是<b>加粗</b>
  的注解，含一个 <a href="https://example.com" class="underline">链接</a> 和 <code> some code </code></Fragment></Term> 的例子。
 
 <Term>这是一个插入了图片的注解<Fragment slot="annotation">闪光晓猫<img src="https://img.055933.xyz/file/1788189044097_giphy__2_.gif" alt="图片注解" /></Fragment></Term>
+
+## HTML语法
+
+### 下划线
+
+分别为单下划线和双下划线，分别有4px和3px的距离，而不是和中文文本脸贴脸，可能英文看上不贴吧
+
+```html
+<u>我需要强调这句话</u>
+<u title="类似于注解">一个类似于注解的下划线语法</u>
+```
+
+<u>我需要强调这句话</u>
+
+<u title="类似于注解">一个类似于注解的下划线语法</u>
+
+### 重点
+
+字面意思的「重点」，用在文本下
+
+```html
+谁不想要一个<span class="em">沾上去就会睡着的枕头</span>呢
+```
+
+谁不想要一个<span class="em">沾上去就会睡着的枕头</span>呢
