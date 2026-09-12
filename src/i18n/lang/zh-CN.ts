@@ -42,16 +42,16 @@ export default {
     tagDesc: "All the articles with the tag",
 
     tagsTitle: "Tags",
-    tagsDesc: "All the tags used in posts.",
+    tagsDesc: "所有标签",
 
     postsTitle: "Posts",
-    postsDesc: "All the articles I've posted.",
+    postsDesc: "全部文章",
 
     archivesTitle: "Archives",
-    archivesDesc: "All the articles I've archived.",
+    archivesDesc: "所有文章归档",
 
     searchTitle: "Search",
-    searchDesc: "Search any article ...",
+    searchDesc: "搜索任何文章 ...",
   },
   a11y: {
     skipToContent: "Skip to content",
