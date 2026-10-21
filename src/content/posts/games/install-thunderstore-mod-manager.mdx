@@ -1,0 +1,65 @@
+
+---
+pubDatetime: 2026-10-21T17:36:00.000+08:00
+title: 如何轻松安装Thunderstore模组(通过Gale或r2modman模组管理器)
+featured: false
+draft: false
+tags:
+  - game
+description: Thunderstore真的很不错啊，希望能做下去
+category: 游戏
+---
+
+import Carousel from "@/components/Carousel.astro";
+
+最近在玩大步走，它的模组很多在Thunderstore上。丝之歌也有很多模组在TS上，有一个模组管理器会舒服很多
+
+## Gale Mod Manager
+
+::github{repo="Kesomannen/gale"}
+
+GaleModManager是Thunderstore的一个现代轻量级模组管理器，代替TS自己的管理器
+
+推荐它的理由是界面相当现代和清爽，加载速度快，支持中文。当前，作为SteamDeck玩家，很高兴它支持Linux，下载一个AppImage即可
+
+![image.png](https://img.055933.xyz/file/1792573072666_image.png)
+
+和r2modman不同，Gale的档案(Profile)使用逻辑更清晰，r2每次我点进去都要楞一下我为什么要选Profile，我要改游戏的话要选哪里。Gale默认给一个档案，下一次点进去也会继承，想改游戏也很方便
+
+![image.png](https://img.055933.xyz/file/1792573764435_image.png)
+
+如果用Steam的话，几乎不需要更改设置。选好游戏后点击左侧第二个标签，下载需要的mod即可。Gale支持自动下载前置，什么都不用管
+
+### 注意事项
+
+如果下载的游戏和mod管理器不在同一个硬盘，会出现mod安装不上的情况。我的SteamDeck因为是双系统，分了两个盘，把Big Walk下在了装Win那个盘上，然后死活安装不上mod，在设置中覆盖游戏路径也一样，只能在Steam设置中将游戏移动到管理器安装的盘上，或者反向把Gale移动过去
+
+r2modman也一样，无法跨盘安装mod。可能在Windows上没有这个问题
+
+## r2modman
+
+虽然前面一直在嫌弃，但是r2modman是我用过的第一款Thunderstore第三方mod管理器。没有中文、界面略显简陋，功能还是没问题的，而且更老牌一些
+
+::github{repo="ebkr/r2modmanPlus"}
+
+<Carousel dot-placement="bottom" autoplay>
+
+![image.png](https://img.055933.xyz/file/1792574829250_image.png)
+
+![image.png](https://img.055933.xyz/file/1792574829918_image.png)
+
+![image.png](https://img.055933.xyz/file/1792574837529_image.png)
+
+</Carousel>
+
+值得一提的是每次启动时都会打开的这个页面
+
+![image.png](https://img.055933.xyz/file/1792574850329_image.png)
+
+如果想要从丝之歌的mod换到Big Walk，得点击左上角的**Back to game selection**来切换。如果你使用的r2modman版本较老，可能会无法展示最近的游戏，尽量更新到最近版
+
+## 安装方法
+
+两个mod管理器都支持Win/Linux，只需要在它们的Github界面下载即可。**不建议在其他网站上，两者的Github都有说明有非官方网站在分发旧版管理器**
+
+Linux下载AppImage比较方便，在SteamDeck桌面模式下载后，右击选择「Add to Steam」即可
