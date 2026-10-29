@@ -1,7 +1,7 @@
 ---
 pubDatetime: 2026-10-29T20:04:20.000+08:00
 title: NeoVim Lua Guide学习及笔记
-featured: true
+featured: false
 draft: false
 tags:
   - 终端
