@@ -1,0 +1,41 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/components/Main.astro";
+import NoteCard from "@/components/NoteCard.astro";
+import { getNotes } from "@/utils/notes";
+import config from "@/config";
+
+const { frontmatter, notes } = await getNotes();
+const pageTitle = frontmatter.title ?? "Notes";
+---
+
+<Layout
+  title={`${pageTitle} | ${config.site.title}`}
+  description={frontmatter.description}
+>
+  <Header />
+
+  <Breadcrumb />
+
+  <Main
+    pageTitle={pageTitle}
+    pageDesc={frontmatter.description}
+    class="app-prose"
+  >
+    <div data-pagefind-body>
+      {
+        notes.map((note, index) => (
+          <>
+            {index > 0 && <hr class="border-border my-6 border-dashed" />}
+            <NoteCard {note} />
+          </>
+        ))
+      }
+    </div>
+  </Main>
+
+  <Footer />
+</Layout>

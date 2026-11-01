@@ -1,0 +1,92 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { slugifyStr } from "@/utils/slugify";
+import config from "@/config";
+import type { RenderedNote } from "@/utils/notes";
+
+type Props = {
+  note: RenderedNote;
+};
+
+const { note } = Astro.props;
+const locale = Astro.currentLocale ?? config.site.lang;
+const hasMeta = Boolean(note.date) || note.tags.length > 0;
+---
+
+<section
+  id={note.slug}
+  class="note-card scroll-mt-24"
+>
+  <h2 class="group text-accent text-lg font-semibold sm:text-xl">
+    <a
+      href={`#${note.slug}`}
+      class="note-title no-underline decoration-none hover:no-underline"
+    >
+      {note.title}
+    </a>
+    <a
+      href={`#${note.slug}`}
+      aria-hidden="true"
+      class="note-title heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100"
+    >#</a>
+  </h2>
+
+  {
+    hasMeta && (
+      <div class="text-muted-foreground mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+        {note.date && (
+          <time datetime={note.date} class="tabular-nums">
+            {note.date}
+          </time>
+        )}
+        {note.tags.length > 0 && (
+          <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            {note.tags.map(tag => (
+              <a
+                href={getRelativeLocaleUrl(
+                  locale,
+                  `tags/${slugifyStr(tag)}/`
+                )}
+                class="note-tag no-underline transition-colors hover:text-accent"
+              >{`#${tag}`}</a>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  {note.html && <div class="note-body mt-4" set:html={note.html} />}
+</section>
+
+<style>
+  /* 标题：除去 .app-prose h2 默认的 2em/1em 上下间距，
+     卡片之间的留白改由分隔线（hr my-6）控制 */
+  .note-card h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  /* 正文首个元素去掉 prose 自带的 margin-top，避免与 mt-4 叠加。
+     注意：正文由 set:html 注入，不含 scoped 属性，需用 :global() 定位 */
+  .note-body :global(> :first-child) {
+    margin-top: 0;
+  }
+
+  /* 正文最后一个元素去掉多余 margin-bottom，保持卡片上下留白均衡 */
+  .note-body :global(> :last-child) {
+    margin-bottom: 0;
+  }
+
+  /* 标题锚点链接：保持无下划线（盖掉 .app-prose a 的虚线下划线） */
+  .note-title,
+  .note-title:hover {
+    text-decoration: none;
+  }
+
+  /* 标签：避免 .app-prose 的链接下划线样式 */
+  .note-tag,
+  .note-tag:hover {
+    text-decoration: none;
+  }
+</style>
