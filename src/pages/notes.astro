@@ -8,7 +8,7 @@ import NoteCard from "@/components/NoteCard.astro";
 import { getNotes } from "@/utils/notes";
 import config from "@/config";
 
-const { frontmatter, notes } = await getNotes();
+const { frontmatter, notes, allTags } = await getNotes();
 const pageTitle = frontmatter.title ?? "Notes";
 ---
 
@@ -25,7 +25,41 @@ const pageTitle = frontmatter.title ?? "Notes";
     pageDesc={frontmatter.description}
     class="app-prose"
   >
-    <div data-pagefind-body>
+    <nav
+      id="notes-filter"
+      aria-label="按标签筛选"
+      class="text-muted-foreground mb-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs"
+      data-pagefind-ignore
+    >
+      <button
+        type="button"
+        data-filter-clear
+        class="notes-filter-btn no-underline transition-colors hover:text-accent"
+      >
+        全部
+      </button>
+      {
+        allTags.map(tag => (
+          <button
+            type="button"
+            data-filter={tag.slug}
+            aria-pressed="false"
+            class="notes-filter-btn no-underline transition-colors hover:text-accent"
+          >
+            #{tag.name}
+            <span class="opacity-60">{tag.count}</span>
+          </button>
+        ))
+      }
+    </nav>
+
+    <p
+      id="notes-filter-status"
+      class="text-muted-foreground mb-4 hidden text-xs"
+      aria-live="polite"
+    ></p>
+
+    <div id="notes-area" data-pagefind-body>
       {
         notes.map((note, index) => (
           <>
@@ -39,3 +73,124 @@ const pageTitle = frontmatter.title ?? "Notes";
 
   <Footer />
 </Layout>
+
+<style>
+  /* 选中态 */
+  .notes-filter-btn[aria-pressed="true"] {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  /* 被筛掉的卡片 */
+  .note-card[data-filtered="true"] {
+    display: none;
+  }
+</style>
+
+<script>
+  /**
+   * Notes 标签筛选（方案 C：原生 JS，多选 OR 逻辑）
+   * - 点击标签切换选中，可多选
+   * - 选中多个时显示包含任一选中标签的笔记
+   * - 无选中时显示全部
+   * - 同步到 URL query（?tag=a,b），便于分享与刷新保留
+   */
+  function setupNotesFilter() {
+    const root = document.getElementById("notes-filter");
+    const area = document.getElementById("notes-area");
+    if (!root || !area) return;
+
+    const buttons = Array.from(
+      root.querySelectorAll<HTMLButtonElement>("[data-filter]")
+    );
+    const clearBtn = root.querySelector<HTMLButtonElement>("[data-filter-clear]");
+    const status = document.getElementById("notes-filter-status");
+    const cards = Array.from(
+      area.querySelectorAll<HTMLElement>(".note-card")
+    );
+
+    /** 从 URL 读取初始选中标签 */
+    function readFromUrl(): string[] {
+      const raw = new URLSearchParams(location.search).get("tag");
+      if (!raw) return [];
+      const valid = new Set(buttons.map(b => b.dataset.filter));
+      return raw
+        .split(",")
+        .map(t => t.trim())
+        .filter(t => t && valid.has(t));
+    }
+
+    const selected = new Set<string>(readFromUrl());
+
+    function syncUrl() {
+      const url = new URL(location.href);
+      if (selected.size > 0) {
+        url.searchParams.set("tag", [...selected].join(","));
+      } else {
+        url.searchParams.delete("tag");
+      }
+      // 用 replaceState 避免污染历史记录
+      history.replaceState(history.state, "", url);
+    }
+
+    function apply() {
+      // 更新按钮状态
+      for (const btn of buttons) {
+        const active = selected.has(btn.dataset.filter!);
+        btn.setAttribute("aria-pressed", String(active));
+      }
+
+      // 过滤卡片
+      let visible = 0;
+      for (const card of cards) {
+        if (selected.size === 0) {
+          card.removeAttribute("data-filtered");
+          visible++;
+          continue;
+        }
+        const cardTags = (card.dataset.tags ?? "").split(" ").filter(Boolean);
+        const match = cardTags.some(t => selected.has(t));
+        if (match) {
+          card.removeAttribute("data-filtered");
+          visible++;
+        } else {
+          card.setAttribute("data-filtered", "true");
+        }
+      }
+
+      // 状态提示
+      if (status) {
+        if (selected.size === 0) {
+          status.classList.add("hidden");
+          status.textContent = "";
+        } else {
+          status.classList.remove("hidden");
+          status.textContent = `已筛选 ${selected.size} 个标签，显示 ${visible} 条笔记`;
+        }
+      }
+    }
+
+    // 绑定标签按钮
+    for (const btn of buttons) {
+      btn.addEventListener("click", () => {
+        const tag = btn.dataset.filter!;
+        if (selected.has(tag)) selected.delete(tag);
+        else selected.add(tag);
+        syncUrl();
+        apply();
+      });
+    }
+
+    clearBtn?.addEventListener("click", () => {
+      selected.clear();
+      syncUrl();
+      apply();
+    });
+
+    // 首次应用（支持 URL 直接带 ?tag= 进入）
+    apply();
+  }
+
+  setupNotesFilter();
+  document.addEventListener("astro:page-load", setupNotesFilter);
+</script>

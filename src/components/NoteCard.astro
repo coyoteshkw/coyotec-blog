@@ -16,6 +16,7 @@ const hasMeta = Boolean(note.date) || note.tags.length > 0;
 <section
   id={note.slug}
   class="note-card scroll-mt-24"
+  data-tags={note.tags.map(t => slugifyStr(t)).join(" ")}
 >
   <h2 class="group text-accent text-lg font-semibold sm:text-xl">
     <a
