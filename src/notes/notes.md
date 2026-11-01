@@ -1,7 +1,17 @@
 ---
 title: Notes
-description: 开发过程中遇到的问题、解决方案和零碎发现。
+description: 遇到的问题、解决方案和零碎发现
 ---
+
+## pnpm/bun patch OR 修改全局包时会发生什么？
+
+<!-- tags: nodejs, pnpm, bun -->
+
+为了快速，pnpm和bun都会用硬链接或mac特有的快速复制来复用已经下载过的包
+
+但这种方式会导致在Win/Linux上，某个项目如果突然心血来潮修改了原包的内容，所有用过这个包的项目都会受影响。MacOS有法子让它在被修改时就独立成不受影响的新包
+
+为解决这个问题，需要用`patch`指令，效果和Mac的一样
 
 ## pnpm patch 使用时遇到的问题
 <!-- date: 2026-11-01 | tags: pnpm, patch -->
@@ -22,20 +32,6 @@ description: 开发过程中遇到的问题、解决方案和零碎发现。
 
 这里不需要填写日期或标签，直接记录正文即可
 
-## pnpm/bun patch OR 修改全局包时会发生什么？
-
-<!-- date: 2026-10-30 | tags: pnpm, patch -->
-
-为了快速，pnpm和bun都会用硬链接或mac特有的快速复制来复用已经下载过的包
-
-但这种方式会导致在Win/Linux上，某个项目如果突然心血来潮修改了原包的内容，所有用过这个包的项目都会受影响。MacOS有法子让它在被修改时就独立成不受影响的新包
-
-为解决这个问题，需要用`patch`指令，效果和Mac的一样
-
-```bash
-pnpm patch node_modules_name
-bun patch node_modules_name
-```
 
 
 
