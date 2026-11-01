@@ -96,6 +96,8 @@ const pageTitle = frontmatter.title ?? "Notes";
 </style>
 
 <script>
+  import { setupCodeBlocks } from "@/scripts/codeBlocks";
+
   /**
    * Notes 标签筛选（方案 C：原生 JS，多选 OR 逻辑）
    * - 点击标签切换选中，可多选；选中多个时显示包含任一标签的笔记
@@ -237,5 +239,9 @@ const pageTitle = frontmatter.title ?? "Notes";
   }
 
   setupNotesFilter();
-  document.addEventListener("astro:page-load", setupNotesFilter);
+  setupCodeBlocks();
+  document.addEventListener("astro:page-load", () => {
+    setupNotesFilter();
+    setupCodeBlocks();
+  });
 </script>
