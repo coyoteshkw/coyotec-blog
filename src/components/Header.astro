@@ -3,6 +3,12 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import IconUnderline from "@/assets/icons/IconUnderline.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import IconArchive from "@/assets/icons/IconArchive.svg";
+import IconNews from "@/assets/icons/IconNews.svg";
+import IconNote from "@/assets/icons/IconNote.svg";
+import IconTag from "@/assets/icons/IconTag.svg";
+import IconUserCode from "@/assets/icons/IconUserCode.svg";
+import IconCalendarWeek from "@/assets/icons/IconCalendarWeek.svg";
+import IconTrain from "@/assets/icons/IconTrain.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
@@ -75,53 +81,100 @@ const isActive = (path: string) => {
       </button>
       <ul
         id="menu-items"
-        class="[&>li>a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0 sm:[&>li]:h-8 [&>li>a]:block [&>li>a]:px-4 [&>li>a]:py-3 [&>li>a]:text-center [&>li>a]:font-medium sm:[&>li>a]:px-2 sm:[&>li>a]:py-1"
+        class="[&>li>a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 sm:mt-0 sm:flex sm:w-auto sm:items-center sm:gap-x-5 sm:gap-y-0 sm:[&>li]:h-8 max-sm:[&>li>a]:block [&>li>a]:px-4 [&>li>a]:py-3 [&>li>a]:text-center [&>li>a]:font-medium sm:[&>li>a]:px-0 sm:[&>li>a]:py-0"
       >
-        {
-          /* 隐藏 Posts 导航项，顶栏太拥挤
-          <li class="col-span-2">
-            <a
-              href={getRelativeLocaleUrl(locale, "posts")}
-              class:list={{ "active-nav": isActive("/posts") }}
-            >
-              {t.nav.posts}
-            </a>
-          </li>
-          */
-        }
         <li class="col-span-2">
-          <a
-            href={getRelativeLocaleUrl(locale, "tags")}
-            class:list={{ "active-nav": isActive("/tags") }}
+          <LinkButton
+            href={getRelativeLocaleUrl(locale, "posts")}
+            class:list={[
+              "focus-outline relative h-12 w-full justify-center sm:size-8 sm:h-8 sm:w-8",
+              { "active-nav": isActive("/posts") },
+            ]}
+            title={t.nav.posts}
+            aria-label={t.nav.posts}
           >
-            {t.nav.tags}
-          </a>
+            <IconNews class="hidden size-6 sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:-translate-x-1/2 sm:-translate-y-1/2" />
+            <span class="sm:sr-only">{t.nav.posts}</span>
+            {isActive("/posts") && (
+              <IconUnderline
+                aria-hidden="true"
+                class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:left-1/2 sm:w-6 sm:-translate-x-1/2"
+              />
+            )}
+          </LinkButton>
         </li>
         <li class="col-span-2">
-          <a
+          <LinkButton
             href={getRelativeLocaleUrl(locale, "notes")}
-            class:list={{ "active-nav": isActive("/notes") }}
+            class:list={[
+              "focus-outline relative h-12 w-full justify-center sm:size-8 sm:h-8 sm:w-8",
+              { "active-nav": isActive("/notes") },
+            ]}
+            title={t.nav.notes}
+            aria-label={t.nav.notes}
           >
-            {t.nav.notes}
-          </a>
+            <IconNote class="hidden size-6 sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:-translate-x-1/2 sm:-translate-y-1/2" />
+            <span class="sm:sr-only">{t.nav.notes}</span>
+            {isActive("/notes") && (
+              <IconUnderline
+                aria-hidden="true"
+                class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:left-1/2 sm:w-6 sm:-translate-x-1/2"
+              />
+            )}
+          </LinkButton>
         </li>
         <li class="col-span-2">
-          <a
-            href={getRelativeLocaleUrl(locale, "about")}
-            class:list={{ "active-nav": isActive("/about") }}
+          <LinkButton
+            href={getRelativeLocaleUrl(locale, "tags")}
+            class:list={[
+              "focus-outline relative h-12 w-full justify-center sm:size-8 sm:h-8 sm:w-8",
+              { "active-nav": isActive("/tags") },
+            ]}
+            title={t.nav.tags}
+            aria-label={t.nav.tags}
           >
-            {t.nav.about}
-          </a>
+            <IconTag class="hidden size-6 sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:-translate-x-1/2 sm:-translate-y-1/2" />
+            <span class="sm:sr-only">{t.nav.tags}</span>
+            {isActive("/tags") && (
+              <IconUnderline
+                aria-hidden="true"
+                class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:left-1/2 sm:w-6 sm:-translate-x-1/2"
+              />
+            )}
+          </LinkButton>
+        </li>
+        <li class="col-span-2">
+          <LinkButton
+            href={getRelativeLocaleUrl(locale, "about")}
+            class:list={[
+              "focus-outline relative h-12 w-full justify-center sm:size-8 sm:h-8 sm:w-8",
+              { "active-nav": isActive("/about") },
+            ]}
+            title={t.nav.about}
+            aria-label={t.nav.about}
+          >
+            <IconUserCode class="hidden size-6 sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:-translate-x-1/2 sm:-translate-y-1/2" />
+            <span class="sm:sr-only">{t.nav.about}</span>
+            {isActive("/about") && (
+              <IconUnderline
+                aria-hidden="true"
+                class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:left-1/2 sm:w-6 sm:-translate-x-1/2"
+              />
+            )}
+          </LinkButton>
         </li>
         <li class="col-span-2">
           <a
             href="https://weekly.coyoteshkw.com/"
             target="_blank"
             rel="noopener noreferrer"
-            class="group inline-flex items-center gap-0.5"
+            title="周记"
+            aria-label="周记"
+            class="group relative flex h-12 w-full items-center justify-center sm:flex sm:size-8"
           >
-            Weekly
-            <IconArrowRight class="nudge-right inline-block size-4" />
+            <IconCalendarWeek class="hidden size-6 sm:block" />
+            <span class="sm:sr-only">Weekly</span>
+            <IconArrowRight class="nudge-right inline-block size-4 sm:absolute sm:top-0 sm:end-0 sm:size-2.5" />
           </a>
         </li>
         <li class="col-span-2">
@@ -131,10 +184,11 @@ const isActive = (path: string) => {
             rel="noopener noreferrer"
             title="开往"
             aria-label="开往"
-            class="group inline-flex items-center gap-0.5"
+            class="group relative flex h-12 w-full items-center justify-center sm:flex sm:size-8"
           >
-            Travel
-            <IconArrowRight class="nudge-up-right inline-block size-4 -rotate-45" />
+            <IconTrain class="hidden size-6 sm:block" />
+            <span class="sm:sr-only">Travel</span>
+            <IconArrowRight class="nudge-up-right inline-block size-4 -rotate-45 sm:absolute sm:top-0.5 sm:end-0.5 sm:size-2.5 sm:-rotate-45" />
           </a>
         </li>
         {
@@ -154,7 +208,7 @@ const isActive = (path: string) => {
                 {isActive("/archives") && (
                   <IconUnderline
                     aria-hidden="true"
-                    class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:w-6"
+                    class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:left-1/2 sm:w-6 sm:-translate-x-1/2"
                   />
                 )}
               </LinkButton>
@@ -175,7 +229,7 @@ const isActive = (path: string) => {
                 {isActive("/search") && (
                   <IconUnderline
                     aria-hidden="true"
-                    class="absolute bottom-0 w-6 scale-125 max-sm:inset-s-2"
+                    class="absolute bottom-0 w-6 scale-125 max-sm:inset-s-2 sm:left-1/2 sm:-translate-x-1/2"
                   />
                 )}
               </LinkButton>
@@ -234,6 +288,15 @@ const isActive = (path: string) => {
 </script>
 
 <style is:global>
+  /* 桌面端导航为图标模式，选中态由 IconUnderline 表达，
+     不再使用 active-nav 的文字波浪下划线 */
+  @media (min-width: 40rem) {
+    #menu-items > li > a.active-nav,
+    #menu-items > li > span.active-nav {
+      text-decoration-line: none;
+    }
+  }
+
   /* 导航箭头 hover 弹跳动画 */
   @keyframes nudge-right {
     0%   { translate: 0 0; }
