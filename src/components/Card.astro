@@ -19,11 +19,87 @@ const locale = Astro.currentLocale ?? config.site.lang;
 const categoryName = data.category;
 ---
 
+<script>
+  /**
+   * 文章标题点击后的加载指示器
+   *
+   * 点击站内文章链接时，在标题右侧显示旋转圆圈，直到 ClientRouter
+   * 完成页面切换（astro:page-load）。仅在真正的普通左键点击时触发，
+   * 新标签打开 / 修饰键 / 中键 / 同页锚点等情况不显示。
+   *
+   * 为避免快速加载时圆圈刚展开就被打断（视觉上像是“闪一下”），
+   * 延迟 SHOW_DELAY 毫秒才真正显示：
+   * - 加载更快时：圆圈从未出现，页面直接切换，视觉上无干扰
+   * - 加载更慢时：延迟后出现，用户仍有明确的“正在加载”反馈
+   */
+  const SHOW_DELAY = 200;
+
+  function initPostLoading() {
+    if (document.documentElement.dataset.postLoadingInit === "1") return;
+    document.documentElement.dataset.postLoadingInit = "1";
+
+    /** 待显示中的定时器集合（页面切换时需全部取消） */
+    const pending = new Set<number>();
+
+    // 用事件委托覆盖首次加载与后续 View Transitions 注入的卡片
+    document.addEventListener("click", event => {
+      const mouse = event as MouseEvent;
+      // 注意：不能用 defaultPrevented 判断 —— ClientRouter 会先调用
+      // preventDefault() 接管导航，这里再做检查会永远跳过。
+      if (mouse.button !== 0) return;
+      if (mouse.metaKey || mouse.ctrlKey || mouse.shiftKey || mouse.altKey) return;
+
+      const link = (event.target as HTMLElement | null)?.closest<HTMLAnchorElement>(
+        "a[data-post-link]"
+      );
+      if (!link) return;
+      if (link.target === "_blank") return;
+
+      const url = new URL(link.href, location.href);
+      // 同页（仅 hash 变化）不显示
+      if (
+        url.pathname === location.pathname &&
+        url.search === location.search
+      ) {
+        return;
+      }
+
+      const indicator = link.querySelector<HTMLElement>(".post-loading");
+      if (!indicator) return;
+
+      const timer = window.setTimeout(() => {
+        pending.delete(timer);
+        indicator.setAttribute("data-active", "");
+      }, SHOW_DELAY);
+      pending.add(timer);
+    });
+
+    // 页面切换完成（或用户放弃导航）后清除所有加载态与待显示定时器
+    const clearAll = () => {
+      for (const timer of pending) {
+        clearTimeout(timer);
+      }
+      pending.clear();
+
+      for (const el of document.querySelectorAll(".post-loading[data-active]")) {
+        el.removeAttribute("data-active");
+      }
+    };
+
+    document.addEventListener("astro:page-load", clearAll);
+    document.addEventListener("astro:after-swap", clearAll);
+  }
+
+  initPostLoading();
+</script>
+
+
 <li class="my-6">
   <a
     href={getPostUrl(id, filePath, locale)}
+    data-post-link
     class:list={[
-      "text-accent inline-block text-lg font-medium",
+      "text-accent inline-flex items-center gap-1 text-lg font-medium",
       "decoration-dashed underline-offset-4 hover:underline",
       "focus-visible:no-underline focus-visible:underline-offset-0",
     ]}
@@ -31,6 +107,9 @@ const categoryName = data.category;
     <Heading transition:name={toTransitionName(title)}>
       {title}
     </Heading>
+    <span class="post-loading" aria-hidden="true">
+      <span class="post-loading-spinner"></span>
+    </span>
   </a>
 
   <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -64,5 +143,52 @@ const categoryName = data.category;
   }
   .category-badge:hover span {
     opacity: 0.9;
+  }
+
+  /* 文章加载指示器：点击标题后在右侧显示旋转圆圈。
+     父级 <a> 为 inline-flex，指示器作为同排 flex item 出现，
+     用 width 过渡展开，不会引起标题换行或跳动 */
+  .post-loading {
+    display: inline-flex;
+    flex: none;
+    width: 0;
+    height: 1em;
+    margin-inline-start: 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+      width 0.15s ease,
+      opacity 0.15s ease;
+  }
+
+  /* 激活状态：撑开占位并淡入 */
+  .post-loading[data-active] {
+    width: 0.75em;
+    opacity: 1;
+  }
+
+  .post-loading-spinner {
+    display: block;
+    width: 0.75em;
+    height: 0.75em;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: post-loading-spin 0.6s linear infinite;
+  }
+
+  @keyframes post-loading-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* 尊重「减少动态效果」偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    .post-loading-spinner {
+      animation-duration: 1.5s;
+    }
   }
 </style>
