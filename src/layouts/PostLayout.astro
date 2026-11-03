@@ -1,6 +1,9 @@
 ---
 import Layout from "./Layout.astro";
 import config from "@/config";
+import { getAssetPath } from "@/utils/withBase";
+import type { PostTypography } from "@/types/typography";
+import { TYPOGRAPHY_FONT_CSS } from "@/types/typography";
 
 type Props = {
   title?: string;
@@ -9,12 +12,23 @@ type Props = {
   canonicalURL?: string;
   pubDatetime?: Date;
   modDatetime?: Date | null;
+  /** 文章排版预设，决定是否需要额外加载字体样式表 */
+  typography?: PostTypography;
 };
 
 const { site } = config;
 
-const { title, description, ogImage, canonicalURL, pubDatetime, modDatetime } =
-  Astro.props;
+const {
+  title,
+  description,
+  ogImage,
+  canonicalURL,
+  pubDatetime,
+  modDatetime,
+  typography,
+} = Astro.props;
+
+const fontCss = typography ? TYPOGRAPHY_FONT_CSS[typography] : undefined;
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -35,6 +49,19 @@ const structuredData = {
 
 <Layout {title} {description} {ogImage} {canonicalURL}>
   <Fragment slot="head">
+    {
+      fontCss && (
+        <>
+          <link
+            rel="preconnect"
+            href="https://gw.alipayobjects.com"
+            crossorigin
+          />
+          <link rel="stylesheet" href={getAssetPath(fontCss)} />
+        </>
+      )
+    }
+
     <!-- Override og:type for article pages -->
     <meta property="og:type" content="article" />
 

@@ -15,3 +15,6 @@
 
 # Ignore MDX files
 *.mdx
+
+# Vendored third-party font-face declarations
+public/fonts/jinkai.css

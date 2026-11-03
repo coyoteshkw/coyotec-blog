@@ -74,6 +74,29 @@ Inside of AstroPaper, you'll see the following folders and files:
 
 All blog posts are stored in the `src/content/posts/` directory. You can organise posts into subdirectories — the subdirectory name becomes part of the post URL.
 
+## 📝 文章排版预设
+
+通过 frontmatter 的 `typography` 字段，可单独调整某篇文章的字体与行文风格。不写该字段即保持全站现状（Rubik 无衬线、无首行缩进），也不会产生任何额外的字体请求。
+
+```yaml
+---
+title: 示例文章
+typography: kai # 可选，见下表
+---
+```
+
+| 取值             | 字体              | 行文风格                            | 额外请求                                             |
+| ---------------- | ----------------- | ----------------------------------- | ---------------------------------------------------- |
+| 省略 / `default` | 全站默认（Rubik） | 现状，无缩进                        | 无                                                   |
+| `kai`            | 仓耳今楷 02       | 首行缩进 2 字符、行高 1.9、两端对齐 | 仅该文章加载 `fonts/jinkai.css` 及实际用到的字形分片 |
+| `serif`          | 系统宋体栈        | 同上                                | 无（仅使用本地字体）                                 |
+
+实现说明：
+
+- 预设枚举与字体样式表映射位于 `src/types/typography.ts`，新增预设只需在此登记并补充 `src/styles/post-typography.css` 的规则。
+- 字体分片声明在 `public/fonts/jinkai.css`（97 个 `@font-face`，按 `unicode-range` 分包，字形托管于阿里云 CDN），版权与授权见该文件头部注释。
+- 楷体仅有 400 字重，故标题与表头统一回退无衬线字体，避免合成粗体。
+
 ## 📖 Documentation
 
 Documentation can be read in two formats\_ _markdown_ & _blog post_.

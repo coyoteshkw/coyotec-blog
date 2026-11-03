@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "./theme.css";
 @import "./typography.css";
+@import "./post-typography.css";
 @import "./github-card.css";
 @import "rehype-callouts/theme/obsidian";
 @import "./waline.css";

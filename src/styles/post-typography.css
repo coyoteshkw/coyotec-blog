@@ -1,0 +1,64 @@
+/* ============================================================
+   文章排版预设
+   由 frontmatter 的 `typography` 字段驱动。未设置时 <article> 不带
+   data-typography 属性，本文件全部规则不命中，页面与改动前一致。
+   ============================================================ */
+@layer base {
+  /* ---- 共通：缩进式排版（楷体 / 宋体） ---- */
+  .app-prose:is([data-typography="kai"], [data-typography="serif"]) {
+    font-size: 1.0625rem;
+    line-height: 1.9;
+    letter-spacing: 0.02em;
+    text-align: justify;
+  }
+
+  .app-prose:is([data-typography="kai"], [data-typography="serif"]) p {
+    text-indent: 2em;
+    margin-block: 0.55em;
+  }
+
+  /* 标题与表头回退无衬线：楷体只有 400 字重，合成粗体观感不佳 */
+  .app-prose:is([data-typography="kai"], [data-typography="serif"])
+    :is(h1, h2, h3, h4, h5, h6, th) {
+    font-family: var(--font-app);
+    letter-spacing: normal;
+  }
+
+  /* 以下场景不做首行缩进 */
+  .app-prose:is([data-typography="kai"], [data-typography="serif"])
+    :is(
+      .callout-content,
+      blockquote,
+      li,
+      td,
+      th,
+      figcaption,
+      details,
+      .rds-image-figure
+    )
+    p,
+  .app-prose:is([data-typography="kai"], [data-typography="serif"])
+    p:has(> img:only-child),
+  .app-prose:is([data-typography="kai"], [data-typography="serif"])
+    p:has(> .rds-link:only-child) {
+    text-indent: 0;
+  }
+
+  /* 代码保持等宽，不继承正文字体与字距 */
+  .app-prose:is([data-typography="kai"], [data-typography="serif"])
+    :is(code, pre, kbd, samp) {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    letter-spacing: normal;
+  }
+
+  /* ---- 楷体：仓耳今楷 02，分片字体在 public/fonts/jinkai.css 中声明 ---- */
+  .app-prose[data-typography="kai"] {
+    font-family: "TsangerJinKai02", "Kaiti SC", "STKaiti", "KaiTi", serif;
+  }
+
+  /* ---- 宋体：仅使用系统字体，不产生网络请求 ---- */
+  .app-prose[data-typography="serif"] {
+    font-family:
+      "Songti SC", "Source Han Serif SC", "Noto Serif CJK SC", "SimSun", serif;
+  }
+}

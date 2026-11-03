@@ -2,6 +2,7 @@ import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
 import { glob } from "astro/loaders";
 import config from "@/config";
+import { POST_TYPOGRAPHY } from "@/types/typography";
 
 export const BLOG_PATH = "src/content/posts";
 
@@ -23,6 +24,11 @@ const posts = defineCollection({
       hideEditPost: z.boolean().optional(),
       comments: z.boolean().default(true),
       timezone: z.string().optional(),
+      /**
+       * 文章排版预设，留空即保持全站现状。
+       * `kai`：仓耳今楷 + 段落首行缩进；`serif`：系统宋体 + 首行缩进。
+       */
+      typography: z.enum([...POST_TYPOGRAPHY]).optional(),
     }),
 });
 
