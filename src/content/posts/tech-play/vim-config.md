@@ -1,26 +1,27 @@
 ---
 pubDatetime: 2026-10-21T19:03:20.000+08:00
+modDatetime: 2026-11-08T00:45:20.000+08:00
 title: 2026年，我的Vim配置介绍(而不是NeoVim)
 featured: false
 draft: false
 tags:
-  - 终端
-  - Vim
+- 终端
+- Vim
 description: 我喜欢我的Vim配置，很有生活
 category: 折腾
 ---
 
-我明白，NeoVim是潮流也是趋势，但我的Vim生涯是被TheCW这位up主上传的Vim视频开启的。那时的他相信Vim有着无限的可能性，并且毫无保留地讲了他如何配置Vim，包括那些很少有人会自定义的部分(例如他使用非qwert布局，所以他的按键基本上是「全部重设了一遍」)，他的教导奠定了我多年的Vim基础，后面看了一堆Vim的技巧书籍、配置教程，好像都从脑子里流走了，留下来的还是他教给我的基础知识
+NeoVim是潮流也是无可抵挡的趋势，但我的Vim生涯是被TheCW这位up主上传的Vim视频开启的。那时的他相信Vim有着无限的可能性，并且毫无保留地讲了他如何配置Vim，包括那些很少有人会自定义的部分(例如他使用非qwert布局，所以他的按键基本上是「全部重设了一遍」)，他的教导奠定了我多年的Vim基础，后面看了一堆Vim的技巧书籍、配置教程，好像都从脑子里流走了，留下来的还是他教给我的基础知识
 
-唉，这就是我为什么放着好好的LazyVim不用跑来写我的Vim配置，因为这是我真正用的**最熟的配置**，不是我一知半解的、或者拿着AI边流口水边写的(无意冒犯，只是我的Nvim配置真的是乱糟糟的)
+这就是我为什么放着好好的LazyVim不用跑来写我的Vim配置，因为这是我真正用的**最熟的配置**，不是我一知半解的、或者拿着AI边流口水边写的(无意冒犯，只是我的Nvim配置真的是乱糟糟的)
 
-以下所有配置都可以无缝迁移到NeoVim，没什么特别的。用Vim教学是因为我的NeoVim放着Lua化的配置，更漂亮但是我没完全搞明白。等我什么时候全部弄明白并且用的很舒服了，我会再写一篇
+以下所有配置都可以无缝迁移到NeoVim。用Vim教学是因为我的NeoVim放着Lua化的配置，更漂亮但是我没完全搞明白。等我什么时候全部弄明白并且用的很舒服了，我会再写一篇
 
 ## 原则
 
 我讲我认为自己基本了解的东西，不是新的、好的，是我真的在用的
 
-宁愿是旧的，也要能用的、我真的理解的
+宁愿是旧的，也要能用的、我真的理解的(感觉这两段像人机说话)
 
 如果你想看一篇很新的东西，可以去学一下[kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim)，它会给你一个可以先用起来的配置，再慢慢教你配好NeoVim，完全没有一点VimScript掺杂的那种
 
@@ -32,15 +33,29 @@ Vim因为设置成yazi默认，包揽了各种小修改；NeoVim自配置是Vim�
 
 假若某天Vim已经到了完全不够用的地步，而我的Lua水平也很不错了，那么NeoVim将成为完全的上位替代
 
+叠甲完了
+
+所以，在这些之外，其实很少有人提到nvim的lua用来配置vim最基础的部分时并不开箱即用，如果你连最基础如何配置vim都困难(像我一样)，在学习vim之外额外学习一层lua + vim转lua，只会让生活变得更加困难。如果你勇敢地尝试过`nvim-kickstart`项目，很快发现光是读前100行的绪论就得花掉你好几天的业余时间，而这甚至还没有开始看任何和vim相关的代码。拿AI + LazyVim可以解决百分之九十九的问题，剩下百分之一的问题是你会发现任何问题你都得用AI来解决
+
+随后你下定决心看文档，发现有数不尽的文档😂，文档真的很不错，但不能因为玩vim就是喜欢折腾就自动把人和拥有无尽的看文档时间划等号...别鄙视我
+
+那直接用LazyVim当甩手掌柜？用人家写好的配置不是很不错？确实很不错，我仍然推荐LazyVim，但它是一种不一样的世界，我认为vim如果想要常用，就得成为一种很**私人化**的东西，也就是拥有足够的个性化配置，一个毫无个人意志的Vim远不如用VSCode或其他重型IDE，而如果你要很好地修改LazyVim那一整套东西，其实还是要先学不少Lua，看很多文档。
+
+> 但如果你不知为何就是想用Vim，而且马上就想让你的Vim能接替原来的工作流去干活，那LazyVim就是唯一的选择了，先上车后补票偶尔也是没办法的事
+
+而且nvim有些插件实在是有点容易爆炸，总是喜欢改东西，我已经看不少人抱怨过此事，与此同时我有一个无论nvim何时爆炸都能使用的vim，虽然不是很完全，但能用，没炸，而且我和它就像亲兄弟一样熟！
+
+所以养一个vim当后备也是很不错的(乐)
+
 ## 重大抉择
 
-我使用<u>vim-plug</u>而不是lazy.nvim，因为我认为lazy.nvim在配置时更Lua，也不够傻瓜化，vim-plug安装和使用都清晰易懂
+我使用<u>vim-plug</u>而不是lazy.nvim，首先lazy.nvim都叫`nvim`了，其次lazy.nvim在配置时更Lua，也不够傻瓜化，vim-plug安装和使用都清晰易懂
 
 我使用<u>coc.nvim</u>而不是nvim-cmp，我也没有专门去配置treesitter，原因很简单，coc.nvim已经能满足我绝大多数需求，而nvim的其他补全，没有什么教程是我一看就真的觉得哇我已经完全能自己轻松配置了的，无论他们怎么说，一旦到了我需要自己动手才能解决的地方，哪怕一点点，都很容易引发海啸
 
-我并不讨厌<u>VimScript</u>，我认为在简单问题上，它作为内置语言相当简洁清晰，而Lua更像是后来的孩子，写的东西很规矩但很长很杂，同样的问题用VimScript更简单。我知道在更专业的领域并非如此，但就我接触到的部分，特意将Vim配置变更为Lua只是让我的配置更加难以维护了
+我并不讨厌<u>VimScript</u>，我认为在简单问题上，它作为内置语言相当简洁清晰，而Lua更像是后来的孩子，写的东西很规矩但很长很杂，同样的问题用VimScript更简单。我知道在更专业的领域并非如此，但就我接触到的部分，特意将Vim配置变更为Lua只是让我的配置更加难以维护了，现在拥有AI全自动改代码并不能改变这一点
 
-我确实拆分了配置，但只是因为它太长了，事实上合成一个不会有太多后果
+我拆分配置，但只是因为它太长了
 
 ```
 .
@@ -62,9 +77,7 @@ Vim因为设置成yazi默认，包揽了各种小修改；NeoVim自配置是Vim�
 
 忘了说了我在用MacOS，但同样的代码在Linux和WSL2下应该完全没问题
 
-虽然你确实可以在用户家目录下直接创建一个`.vimrc`文件，但以防万一配置真的增长了，还是算了吧
-
-常用的配置路径为`~/.vim`
+常用的配置路径为`~/.vimrc`或`~/.vim/vimrc`，为了拆分配置选择后者
 
 [vim-plug](https://github.com/junegunn/vim-plug) ——  极简Vim插件管理器，低调、简洁、并且稳定
 
@@ -90,11 +103,17 @@ call plug#end()
 
 创建`vimrc`文件
 
-> 如果只有一个Vim配置文件且放在用户家目录根，那么配置文件应该取名为`.vimrc`，但是放在单独的配置目录下就没有这个`.`前缀了
+> 如果只有一个Vim配置文件且放在用户家目录根，那么配置文件应该取名为`.vimrc`，但是放在单独的配置目录下无此`.`前缀
 
 ```vim
 " 通用设置
 source ~/.vim/config/basic.vim
+" 键位映射
+source ~/.vim/config/keymaps.vim
+" 插件配置
+source ~/.vim/config/plugins.vim
+" 外观设置 (主题、字体等)
+source ~/.vim/config/appearance.vim
 ```
 
 basic存放最基础的Vim配置，它让一个Vim即使什么插件都不安装也能正常地跑起来，完成简单的任务
@@ -107,36 +126,39 @@ basic存放最基础的Vim配置，它让一个Vim即使什么插件都不安装
 " ======================================
 " source: https://web.archive.org/web/20090213130939/http://items.sjbach.com/319/configuring-vim-right
 
-syntax on
-set mouse=a
-set hidden
-set number
-set relativenumber
-set nobackup
-set encoding=utf-8
-set hlsearch
-filetype plugin indent on
-set autoindent
-set shiftwidth=4
-set backspace=2
-set tabstop=4 " 一个Tab等于几个空格
-set wildmenu
-set wildmode=list:longest,full
-set ignorecase
-set smartcase
-set title
-set scrolloff=3
-set ruler
+syntax on                          " 开启语法高亮
+set mouse=a                        " 在所有模式下启用鼠标
+set hidden                         " 允许切换缓冲区时不强制保存
+set number                         " 显示绝对行号
+set relativenumber                 " 显示相对行号
+set nobackup                       " 不生成备份文件
+set encoding=utf-8                 " 设置内部编码为 UTF-8
+filetype plugin indent on          " 开启文件类型检测、插件和缩进支持
+set autoindent                     " 新建行时自动继承当前缩进
+set shiftwidth=4                   " 自动缩进和 >>/<< 的宽度为 4 个空格
+set backspace=2                    " 允许插入模式下退格删除缩进、行尾和插入起点
+set tabstop=4                      " 一个 Tab 显示为 4 个空格宽度
+set wildmenu                       " 启用命令行补全菜单
+set wildmode=list:longest,full     " 补全时先列出最长公共前缀，再显示完整候选
+set ignorecase                     " 搜索时默认忽略大小写
+set smartcase                      " 搜索包含大写字母时改为区分大小写
+set title                          " 自动设置终端窗口标题
+set scrolloff=3                    " 光标上下始终保留 3 行可视上下文
+set ruler                          " 在状态栏显示光标位置等信息
 " Highlight search terms...
-set hlsearch
-set incsearch " dynamically as they are typed.
-set belloff=all " so annoying
+set hlsearch                       " 启用搜索高亮
+set incsearch                      " 输入搜索内容时动态增量高亮匹配项
+set belloff=all                    " 关闭所有提示音和响铃
 " 修复按下Esc后光标恢复有延迟的问题
-set ttimeout
-set ttimeoutlen=1
-set ttyfast
-set termguicolors " 24位真彩色(比256色还大)
-set laststatus=2
+set ttimeout                       " 启用终端键码超时检测
+set ttimeoutlen=1                  " 键码超时设为 1 毫秒，减少 Esc 延迟
+set ttyfast                        " 声明使用快速终端，优化重绘
+set termguicolors                  " 启用 24 位真彩色显示
+set laststatus=2                   " 总是显示状态栏
+" 禁用生成 swap 文件
+set noswapfile
+" 当文件在外部被修改时，自动重新读取
+set autoread
 
 
 " 高亮当前行
@@ -171,6 +193,8 @@ set nowrap
 大部分内容都无需解释
 
 `set belloff=all`关闭蜂鸣器，现代电脑很少会让这个东西叫了，但是一些老电脑在Vim执行操作时发出巨大的蜂鸣声，或者操作它使用的终端发出提示音，足以把人吓死。关掉它享受美好生活
+
+在编辑同一个文件时自动警告并生成备份文件听起来很棒，但人类太容易无意识打开多份同文档，然后就炸了。经历了几个月的折磨后还是关掉了，NeoVim默认就是即时更新
 
 和现代编辑器不同，Vim不会自动高亮当前所在行。cursorline为当前行添加下划线，但不好看，后面这一行教你设置高亮行的颜色，颜色是可以自行调整的，但这样就足够好看了
 
@@ -446,6 +470,8 @@ nnoremap <silent> <Leader>z :Goyo 80<CR>
 
 ### ctrlp - 快速查找文件
 
+::github{repo="ctrlpvim/ctrlp.vim"}
+
 nvim有telescope.nvim，但是我发现偶尔用一下的话，ctrlp也凑合够用
 
 ```vim
@@ -479,7 +505,7 @@ map <leader>ff :Files<CR>
 
 如果在NeoVim上使用fzf.vim，搜索底栏还会有一些快捷功能
 
-fzf.vim真的很强大，你还可以用它来查看Git历史提交，映射的所有案件，搜索历史，配色方案，当然，还有文件内查找。映射或直接敲`:Rg`命令即可。强烈推荐自己去看看这个Git仓库
+fzf.vim真的很强大，你还可以用它来查看Git历史提交，映射的所有按键，搜索历史，配色方案，当然，还有文件内查找，映射或直接敲`:Rg`命令即可。`:BCommits`检查历史提交，强烈推荐自己去看看这个Git仓库
 
 注：除了Esc，还可以用Ctrl+Q关闭fzf窗口
 
@@ -984,6 +1010,12 @@ inoremap <C-Enter> <Esc>o
 ```
 
 如果用JetBrains，那就在这个基础上添加一些和Jet兼容的代码，例如快速切换tab
+
+## 工作流
+
+其实没什么固定工作流，我对Vim的定义就是一个随开随用的工具，在这点上我认为它是无敌的
+
+常用的`<leader>ff`检索当前目录，还不够时`:Rg`按字检索当前目录，`:BCommits`检查当前项目下Git提交树
 
 ## 完整配置
 
