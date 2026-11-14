@@ -3,6 +3,16 @@ title: Notes
 description: 遇到的问题、解决方案和零碎发现
 ---
 
+## 最简单的Neovim Markdown补全工具 
+
+<!-- tags: nvim, markdown -->
+
+其实是~~[bullets.vim](https://github.com/bullets-vim/bullets.vim)~~autolist.nvim，因为其他的语法你可以手打而且也很容易处理，利用`markdown.nvim`或者直接动手写一个简单的宏就能搞定，但有序无序列表要自动化又不累手就麻烦得多，我尝试一些重型插件例如`mkdnflow.nvim`，收效甚微
+
+`markdown.nvim`就有列表补全，但不够自动化，手动害得写判断，写完发现了和bullets.vim代码差不多长了会
+
+[autolist.nvim](https://github.com/gaoDean/autolist.nvim)是后起之秀，Lua化，代码量少，配置浅显易懂，重要的是好用
+
 ## Apple Music音乐转网易云
 
 <!-- tags: 音乐 -->
