@@ -45,6 +45,8 @@ Vim因为设置成yazi默认，包揽了各种小修改；NeoVim自配置是Vim�
 
 而且nvim有些插件实在是有点容易爆炸，总是喜欢改东西，我已经看不少人抱怨过此事，与此同时我有一个无论nvim何时爆炸都能使用的vim，虽然不是很完全，但能用，没炸，而且我和它就像亲兄弟一样熟！
 
+最后，纯Vim配置比起Lua配置真的轻松很多，适合新人上手
+
 所以养一个vim当后备也是很不错的(乐)
 
 ## 重大抉择
@@ -733,7 +735,15 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 ```
 
-coc.nvim很稳定，我多少年前用了它，今天再用还是不会突然炸掉，不会太爱我然后送我一个破坏性更新让我体验一下欧卡mod全炸了的感觉，爱你coc
+**语法高亮**
+
+Vim无法达到有了treesitter的nvim的语法高亮细度，但在`coc-settings.json`中开启此选项可以让支持的主题语法上色稍微细一些
+
+```json
+"semanticTokens.enable": true,
+```
+
+coc.nvim很稳定，从未突然爆炸送我一个破坏性更新让我体验一下欧卡mod全炸了的感觉背叛我，，爱你coc
 
 coc.nvim功能很丰富，也因此很容易**忘记**，最好没事多看看配置
 
